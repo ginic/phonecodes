@@ -26,11 +26,26 @@ phonecode_cases = [
     ("ipa", "xsampa", phonecodes.ipa2xsampa, "ben"),
     ("xsampa", "ipa", phonecodes.xsampa2ipa, "amh"),
     ("xsampa", "ipa", phonecodes.xsampa2ipa, "ben"),
+    ("buckeye", "ipa", phonecodes.buckeye2ipa, "eng"),
+    ("ipa", "buckeye", phonecodes.ipa2buckeye, "eng"),
 ]
 
 
 @pytest.mark.parametrize("in_code, out_code, fn_call, language", phonecode_cases)
-def test_conversions(in_code, out_code, fn_call, language, sentences):
+def test_conversion_functions(in_code, out_code, fn_call, language, sentences):
     result = fn_call(sentences[language][in_code], language)
     expected = sentences[language][out_code]
     assert result == expected
+
+
+@pytest.mark.parametrize("in_code, out_code, fn_call, language", phonecode_cases)
+def test_convert(in_code, out_code, fn_call, language, sentences):
+    s_in = sentences[language][in_code]
+    expected = sentences[language][out_code]
+    converted = phonecodes.convert(s_in, in_code, out_code, language)
+    assert converted == expected
+
+
+# TODO implement
+def test_convert_runtime_error():
+    assert False
