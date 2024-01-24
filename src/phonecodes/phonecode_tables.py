@@ -482,10 +482,6 @@ _ipa2callhome["arz"]["a"] = "a"
 ########################################################################
 # ARPABET was invented for English.
 # The standard dictionary written in ARPABET is the CMU dictionary.
-# TIMIT is written in a variant of ARPABET that includes a couple
-# of non-standard allophones, and most significantly, includes
-# separate symbols for the closure and release portions of each stop.
-
 _arpabet2ipa = {
     "AA": "ɑ",
     "AE": "æ",
@@ -541,6 +537,9 @@ _arpabet_vowels = set((k for k in _arpabet2ipa.keys() if k[0] in "AEIOU"))
 _ipa2arpabet = {v: k for k, v in _arpabet2ipa.items()}
 _ipa2tone = {symbol: {v: k for k, v in d.items()} for symbol, d in _tone2ipa.items()}
 
+# TIMIT is written in a variant of ARPABET that includes a couple
+# of non-standard allophones, and most significantly, includes
+# separate symbols for the closure and release portions of each stop.
 _timit2ipa = _arpabet2ipa.copy()
 _timit2ipa.update(
     {
@@ -568,6 +567,21 @@ _timit2ipa.update(
         "T": "",
         "TCL": "t",
         "UX": "ʉ",
+    }
+)
+
+# The Buckeye alphabet is a version of ARPABET used to transcribe the Ohio State Buckeye corpus.
+# The major differences are in nasalized vowels and some syllabic consonants
+_buckeye2ipa = _arpabet2ipa.copy()
+_buckeye2ipa.pop("ER0")
+_buckeye2ipa.pop("WH")
+_buckeye2ipa.pop("IH0")
+_buckeye2ipa.update(
+    {
+        "ER": "ɹ̩",
+        "AEN":
+          'AON', 'AXN', 'IYN', 'EYN', 'OWN', 'DX', 'AYN', 'AAN', 'UWN', 'NX', 'AX', 'EHN', 'UHN', 'AWN', 'AHN', 'TQ', 'IHN', 'ERN', 'OYN']
+
     }
 )
 
