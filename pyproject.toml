@@ -39,5 +39,4 @@ Changelog = "https://github.com/ginic/phonecodes/blob/master/CHANGELOG.md"
 
 [tool.ruff]
 line-length = 120
-
 target-version = "py310"
