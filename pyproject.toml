@@ -33,6 +33,9 @@ dev = [
 
 [project.urls]
 Homepage = "https://github.com/ginic/phonecodes"
+Repository = "https://github.com/ginic/phonecodes.git"
+Issues = "https://github.com/ginic/phonecodes/issues"
+Changelog = "https://github.com/ginic/phonecodes/blob/master/CHANGELOG.md"
 
 [tool.ruff]
 line-length = 120
