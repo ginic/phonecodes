@@ -6,10 +6,10 @@ on:
   push:
     branches: [ $default-branch ]
 
-jobs: 
+jobs:
   build:
-     name: Build distribution
-     runs-on: ubuntu-latest
+    name: Build distribution
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
