@@ -6,10 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 You should also add project tags for each release in Github, see [Managing releases in a repository](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository).
 
-# [Unreleased]
+# [1.0.0] - 2/9/2024
 ### Added
 - Modern python packaging, including pyproject.toml
-- Contribution guidelines 
+- Contribution guidelines
 - Changelog with sematic versioning
 - Usage examples in README
 - Unit tests using pytest and triggered by Github Action on pull request
