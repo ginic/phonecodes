@@ -1,0 +1,42 @@
+[build-system]
+requires = ["setuptools >= 61.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "phonecodes"
+version = "1.0.0"
+description = "Tools for loading dictionaries with various phonecodes (IPA, Callhome, X-SAMPA, ARPABET, DISC=CELEX), for converting among those phonecodes, and for searching those dictionaries for word sequences matching a target."
+readme = "README.md"
+license = {file = "LICENSE.txt"}
+
+requires-python = ">=3.10"
+
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+
+dependencies = []
+
+[project.optional-dependencies]
+# Extra dependencies only needed for running tests go here
+test = [
+    "pytest",
+]
+
+# Dependencies that are useful only to developers, like an autoformatter and support for visualizations in jupyter notebooks go here
+dev = [
+    "ruff"
+]
+
+[project.urls]
+Homepage = "https://github.com/ginic/phonecodes"
+Repository = "https://github.com/ginic/phonecodes.git"
+Issues = "https://github.com/ginic/phonecodes/issues"
+Changelog = "https://github.com/ginic/phonecodes/blob/master/CHANGELOG.md"
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
