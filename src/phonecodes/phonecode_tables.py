@@ -572,8 +572,6 @@ _timit2ipa.update(
 
 # The Buckeye alphabet is a version of ARPABET used to transcribe the Ohio State Buckeye corpus.
 # The major differences are in nasalized vowels and some syllabic consonants
-
-# TODO Finish replacing nasalized vowel symbols
 _buckeye2ipa = _arpabet2ipa.copy()
 _buckeye2ipa.pop("ER0")
 _buckeye2ipa.pop("WH")

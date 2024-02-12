@@ -15,17 +15,17 @@ If you want to convert to or from IPA to some other phonetic code, use `phonecod
 >>> from phonecodes import phonecodes
 >>> print(phonecodes.CODES) # available phonetic alphabets
 {'buckeye', 'disc', 'callhome', 'xsampa', 'arpabet', 'ipa'}
->>> phonecodes.convert("DH IH S IH Z AH0 T EH1 S T", "arpabet", "ipa", "eng") # convert from IPA to ARPABET with explicit language
+>>> phonecodes.convert("DH IH S IH Z AH0 T EH1 S T", "arpabet", "ipa", "eng") # convert from IPA to ARPABET with language explicitly specified
 'ð ɪ s ɪ z ə t ˈɛ s t'
->>> phonecodes.convert("ð ɪ s ɪ z ə t ˈɛ s t", "ipa", "arpabet") # convert from IPA to ARPABET with language optional
+>>> phonecodes.convert("ð ɪ s ɪ z ə t ˈɛ s t", "ipa", "arpabet") # convert from IPA to ARPABET with optional language left out
 'DH IH S IH Z AH0 T EH1 S T'
 >>> phonecodes.ipa2arpabet("ð ɪ s ɪ z ə t ˈɛ s t", "eng") # equivalent to previous with explicit language
 'DH IH S IH Z AH0 T EH1 S T'
->>> phonecodes.ipa2arpabet("ð ɪ s ɪ z ə t ˈɛ s t") # equivalent to previous with language optional
+>>> phonecodes.ipa2arpabet("ð ɪ s ɪ z ə t ˈɛ s t") # equivalent to previous with optional language left out
 'DH IH S IH Z AH0 T EH1 S T'
->>> phonecodes.convert("DH IH S IH Z AH0 T EH1 S T", "arpabet", "ipa") # convert from ARPABET to IPA, language optional
+>>> phonecodes.convert("DH IH S IH Z AH0 T EH1 S T", "arpabet", "ipa") # convert from ARPABET to IPA, optional language left out
 'ð ɪ s ɪ z ə t ˈɛ s t'
->>> phonecodes.arpabet2ipa("DH IH S IH Z AH0 T EH1 S T", "eng") # equivalent to previous with explicit language
+>>> phonecodes.arpabet2ipa("DH IH S IH Z AH0 T EH1 S T", "eng") # equivalent to previous with optional language explicit
 'ð ɪ s ɪ z ə t ˈɛ s t'
 ```
 
