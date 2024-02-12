@@ -587,26 +587,30 @@ _buckeye2ipa.update(
         "AON": "ɔ̃",
         "AXN": "ə̃",
         "IYN": "ĩ",
-        "EYN": ,
-        "OWN": ,
+        "EYN": "ẽɪ̃",
+        "OWN": "õʊ̃",
         "DX": "ɾ",
-        "AYN": ,
+        "AYN": "ãɪ̃",
         "AAN": "ɑ̃",
         "UWN": "ũ",
         "NX": "ɾ̃",
         "AX": "ə",
         "EHN": "ɛ̃",
         "UHN": "ʊ̃",
-        "AWN": ,
+        "AWN": "ãʊ̃",
         "AHN": "ʌ̃",
         "TQ": "ʔ",
         "IHN": "ɪ̃",
         "ERN": "ɹ̩̃",
-        "OYN":,
+        "OYN": "ɔ̃ɪ̃",
     }
 )
+# Remove tone2ipa keys for Buckeye
+for tone_key in _tone2ipa["eng"].keys():
+    _buckeye2ipa.pop(tone_key)
 
-_ipa2buckeye = {v:k for k,v in _buckeye2ipa.items()}
+
+_ipa2buckeye = {v: k for k, v in _buckeye2ipa.items()}
 
 
 #######################################################################
