@@ -18,7 +18,10 @@ def sentences():
             "ipa": "ð ɪ s ɪ z ə t ˈɛ s t",
             "disc": "D I s I z @ t 'E s t",
             "xsampa": 'D I s I z @ t "E s t',
-            "buckeye": "TH IH S IH Z AX T EH S T",
+        },
+        "eng_no_stress": {
+            "ipa": "ð ɪ s ɪ z ə t ɛ s t",
+            "buckeye": "DH IH S IH Z AX T EH S T",
         },
         "amh": {
             "word": "ይህ ፈተና ነው",

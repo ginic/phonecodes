@@ -26,8 +26,9 @@ phonecode_cases = [
     ("ipa", "xsampa", phonecodes.ipa2xsampa, "ben"),
     ("xsampa", "ipa", phonecodes.xsampa2ipa, "amh"),
     ("xsampa", "ipa", phonecodes.xsampa2ipa, "ben"),
-    ("buckeye", "ipa", phonecodes.buckeye2ipa, "eng"),
-    ("ipa", "buckeye", phonecodes.ipa2buckeye, "eng"),
+    # Buckeye conversion doesn't account for stress markers and language is ignored
+    ("buckeye", "ipa", phonecodes.buckeye2ipa, "eng_no_stress"),
+    ("ipa", "buckeye", phonecodes.ipa2buckeye, "eng_no_stress"),
 ]
 
 
@@ -46,6 +47,6 @@ def test_convert(in_code, out_code, fn_call, language, sentences):
     assert converted == expected
 
 
-# TODO implement
-def test_convert_runtime_error():
-    assert False
+def test_convert_value_error():
+    with pytest.raises(ValueError):
+        phonecodes.convert("DH IH S IH Z AH0 T EH1 S T", "arpabet", "buckeye")
