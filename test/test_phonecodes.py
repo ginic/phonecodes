@@ -50,3 +50,9 @@ def test_convert(in_code, out_code, fn_call, language, sentences):
 def test_convert_value_error():
     with pytest.raises(ValueError):
         phonecodes.convert("DH IH S IH Z AH0 T EH1 S T", "arpabet", "buckeye")
+
+
+@pytest.mark.parametrize("ipa_str, buckeye_str", [("kæ̃n", "KAENN")])
+def test_additional_buckeye_examples(ipa_str, buckeye_str):
+    assert phonecodes.buckeye2ipa(buckeye_str) == ipa_str
+    assert phonecodes.ipa2buckeye(ipa_str) == buckeye_str

@@ -175,21 +175,21 @@ def ipa2callhome(x, language):
 
 #########################################################################
 # ARPABET, TIMIT, Buckeye
-def arpabet2ipa(x, language):
+def arpabet2ipa(x, language=None):
     """Convert ARPABET symbol X to IPA"""
     (il, ttf) = translate_string(x, phonecode_tables._arpabet2ipa)
     ol = attach_tones_to_vowels(il, phonecode_tables._ipa_stressmarkers, phonecode_tables._ipa_vowels, -1, -1)
     return "".join(ol)
 
 
-def ipa2arpabet(x, language):
+def ipa2arpabet(x, language=None):
     """Convert IPA symbols to ARPABET"""
     (il, ttf) = translate_string(x, phonecode_tables._ipa2arpabet)
     ol = attach_tones_to_vowels(il, "012", phonecode_tables._arpabet_vowels, 1, 1)
     return "".join(ol)
 
 
-def timit2ipa(x, language):
+def timit2ipa(x, language=None):
     """Convert TIMIT phone codes to IPA"""
     x = x.upper()
     (il, ttf) = translate_string(x, phonecode_tables._timit2ipa)
@@ -197,14 +197,14 @@ def timit2ipa(x, language):
     return "".join(ol)
 
 
-def buckeye2ipa(x, language):
+def buckeye2ipa(x, language=None):
     """Convert Buckeye phone codes to IPA"""
     x = x.upper()
     (il, ttf) = translate_string(x, phonecode_tables._buckeye2ipa)
     return "".join(il)
 
 
-def ipa2buckeye(x, language):
+def ipa2buckeye(x, language=None):
     "Convert IPA symbols to Buckeye phone codes"
     (il, ttf) = translate_string(x, phonecode_tables._ipa2buckeye)
     return "".join(il)
