@@ -83,13 +83,13 @@ def attach_tones_to_vowels(il, tones, vowels, searchstep, catdir):
 
 #####################################################################
 # X-SAMPA
-def ipa2xsampa(x, language):
+def ipa2xsampa(x, language=None):
     """Attempt to return X-SAMPA equivalent of an IPA phone x."""
     (tl, ttf) = translate_string(x, phonecode_tables._ipa2xsampa)
     return "".join(tl)
 
 
-def xsampa2ipa(x, language):
+def xsampa2ipa(x, language=None):
     """Return the IPA equivalent of X-SAMPA phone x."""
     (tl, ttf) = translate_string(x, phonecode_tables._xsampa_and_diac2ipa)
     return "".join(tl)
