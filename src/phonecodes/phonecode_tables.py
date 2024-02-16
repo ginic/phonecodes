@@ -482,10 +482,6 @@ _ipa2callhome["arz"]["a"] = "a"
 ########################################################################
 # ARPABET was invented for English.
 # The standard dictionary written in ARPABET is the CMU dictionary.
-# TIMIT is written in a variant of ARPABET that includes a couple
-# of non-standard allophones, and most significantly, includes
-# separate symbols for the closure and release portions of each stop.
-
 _arpabet2ipa = {
     "AA": "ɑ",
     "AE": "æ",
@@ -541,6 +537,9 @@ _arpabet_vowels = set((k for k in _arpabet2ipa.keys() if k[0] in "AEIOU"))
 _ipa2arpabet = {v: k for k, v in _arpabet2ipa.items()}
 _ipa2tone = {symbol: {v: k for k, v in d.items()} for symbol, d in _tone2ipa.items()}
 
+# TIMIT is written in a variant of ARPABET that includes a couple
+# of non-standard allophones, and most significantly, includes
+# separate symbols for the closure and release portions of each stop.
 _timit2ipa = _arpabet2ipa.copy()
 _timit2ipa.update(
     {
@@ -570,6 +569,46 @@ _timit2ipa.update(
         "UX": "ʉ",
     }
 )
+
+# The Buckeye alphabet is a version of ARPABET used to transcribe the Ohio State Buckeye corpus.
+# The major differences are in nasalized vowels and some syllabic consonants
+_buckeye2ipa = _arpabet2ipa.copy()
+_buckeye2ipa.pop("ER0")
+_buckeye2ipa.pop("WH")
+_buckeye2ipa.pop("IH0")
+_buckeye2ipa.pop("Q")
+_buckeye2ipa.pop("AH0")
+_buckeye2ipa.update(
+    {
+        "ER": "ɹ̩",
+        "AEN": "æ̃",
+        "AON": "ɔ̃",
+        "AXN": "ə̃",
+        "IYN": "ĩ",
+        "EYN": "ẽɪ̃",
+        "OWN": "õʊ̃",
+        "DX": "ɾ",
+        "AYN": "ãɪ̃",
+        "AAN": "ɑ̃",
+        "UWN": "ũ",
+        "NX": "ɾ̃",
+        "AX": "ə",
+        "EHN": "ɛ̃",
+        "UHN": "ʊ̃",
+        "AWN": "ãʊ̃",
+        "AHN": "ʌ̃",
+        "TQ": "ʔ",
+        "IHN": "ɪ̃",
+        "ERN": "ɹ̩̃",
+        "OYN": "ɔ̃ɪ̃",
+    }
+)
+# Remove tone2ipa keys for Buckeye
+for tone_key in _tone2ipa["eng"].keys():
+    _buckeye2ipa.pop(tone_key)
+
+
+_ipa2buckeye = {v: k for k, v in _buckeye2ipa.items()}
 
 
 #######################################################################

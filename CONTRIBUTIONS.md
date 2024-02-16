@@ -20,7 +20,7 @@ Issues that are open for contribution are given the following labels:
 
 
 ## Issue reporting and help
-Report bugs or suggested features as issues on the [Github repo](https://github.com/ginic/phonecodes). Please keep in mind that we are a small team with many responsibilities and may take awhile to respond. 
+Report bugs or suggested features as issues on the [Github repo](https://github.com/ginic/phonecodes). Check to see whether your problem has already been reported before creating a new issue. Please keep in mind that we are a small team with many responsibilities and may take awhile to respond. 
 
 # Development Guidelines
 ## Development environment set-up

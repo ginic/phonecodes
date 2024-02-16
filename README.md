@@ -1,10 +1,10 @@
 # phonecodes
-This library provides tools for converting between the [International Phonetic Alphabet (IPA)](https://en.wikipedia.org/wiki/International_Phonetic_Alphabet) and other phonetic alphabets used to transcribe speech, including Callhome, [X-SAMPA](https://en.wikipedia.org/wiki/X-SAMPA), [ARPABET](https://en.wikipedia.org/wiki/ARPABET), [DISC/CELEX](https://catalog.ldc.upenn.edu/LDC96L14). Additionally, tools for searching mappings between phonetic symbols and reading/writing pronounciation lexicon files in several standard formats are also provided.
+This library provides tools for converting between the [International Phonetic Alphabet (IPA)](https://en.wikipedia.org/wiki/International_Phonetic_Alphabet) and other phonetic alphabets used to transcribe speech, including Callhome, [X-SAMPA](https://en.wikipedia.org/wiki/X-SAMPA), [ARPABET](https://en.wikipedia.org/wiki/ARPABET), [DISC/CELEX](https://catalog.ldc.upenn.edu/LDC96L14) and [Buckeye Corpus Phonetic Alphabet](https://buckeyecorpus.osu.edu/). Additionally, tools for searching mappings between phonetic symbols and reading/writing pronounciation lexicon files in several standard formats are also provided.
 
 These functionalities are useful for processing data for automatic speech recognition, text to speech, and linguistic analyses of speech.
 
 # Setup and Installation
-Install the library by running `pip install phonecodes` with python 3.10 or greater.
+Install the library by running `pip install phonecodes` with python 3.10 or greater. It probably works with earlier versions of python, but this was not tested.
 
 Developers may refer to the CONTRIBUTIONS.md for information on the development environment for testing, linting and contributing to the code.
 
@@ -14,19 +14,22 @@ If you want to convert to or from IPA to some other phonetic code, use `phonecod
 ```
 >>> from phonecodes import phonecodes
 >>> print(phonecodes.CODES) # available phonetic alphabets
-{'arpabet', 'ipa', 'xsampa', 'callhome', 'disc'}
->>> phonecodes.convert("ð ɪ s ɪ z ə t ˈɛ s t", "ipa", "arpabet") # convert from IPA to ARPABET with language optional
->>> phonecodes.convert("DH IH S IH Z AH0 T EH1 S T", "arpabet", "ipa", "eng") # convert from IPA to ARPABET with language
+{'buckeye', 'disc', 'callhome', 'xsampa', 'arpabet', 'ipa'}
+>>> phonecodes.convert("DH IH S IH Z AH0 T EH1 S T", "arpabet", "ipa", "eng") # convert from IPA to ARPABET with language explicitly specified
 'ð ɪ s ɪ z ə t ˈɛ s t'
+>>> phonecodes.convert("ð ɪ s ɪ z ə t ˈɛ s t", "ipa", "arpabet") # convert from IPA to ARPABET with optional language left out
 'DH IH S IH Z AH0 T EH1 S T'
->>> phonecodes.ipa2arpabet("ð ɪ s ɪ z ə t ˈɛ s t", "eng") # equivalent to previous, language required
+>>> phonecodes.ipa2arpabet("ð ɪ s ɪ z ə t ˈɛ s t", "eng") # equivalent to previous with explicit language
 'DH IH S IH Z AH0 T EH1 S T'
->>> phonecodes.convert("DH IH S IH Z AH0 T EH1 S T", "arpabet", "ipa") # convert from ARPABET to IPA, language optional
+>>> phonecodes.ipa2arpabet("ð ɪ s ɪ z ə t ˈɛ s t") # equivalent to previous with optional language left out
+'DH IH S IH Z AH0 T EH1 S T'
+>>> phonecodes.convert("DH IH S IH Z AH0 T EH1 S T", "arpabet", "ipa") # convert from ARPABET to IPA, optional language left out
 'ð ɪ s ɪ z ə t ˈɛ s t'
->>> phonecodes.arpabet2ipa("DH IH S IH Z AH0 T EH1 S T", "eng") # equivalent to previous with language required
+>>> phonecodes.arpabet2ipa("DH IH S IH Z AH0 T EH1 S T", "eng") # equivalent to previous with optional language explicit
 'ð ɪ s ɪ z ə t ˈɛ s t'
 ```
 
+For 'arpabet', 'buckeye' and 'xsampa', specifying a language is optional and ignored by the code, since X-SAMPA is language agnostic and ARAPABET and Buckeye were designed to work only for English. 
 Note that for 'callhome' and 'disc' you should also specify a language code from the following lists:
 - DISC/CELEX: Dutch `'nld'`, English `'eng'`, German `'deu'`. Uses German if unspecified.
 - Callhome: Spanish `'spa'`, Egyptian Arabic `'arz'`, Mandarin Chinese `'cmn'`. You MUST specify an appropriate language code or you'll get a KeyError.

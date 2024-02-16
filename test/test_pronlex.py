@@ -54,6 +54,8 @@ def test_dictionaries_convert_phonecodes(srcfile, codes, tmp_path, fixture_path,
             expected = (fixture_path / f"{destfile}.txt").read_text()
             output = (tmp_path / f"{destfile}.txt").read_text()
             assert output == expected
+            output = (tmp_path / f"{destfile}.txt").read_text()
+            assert output == expected
 
 
 @pytest.mark.parametrize("srcfile, codes", pronlex_conversions)
