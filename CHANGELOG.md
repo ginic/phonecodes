@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 You should also add project tags for each release in Github, see [Managing releases in a repository](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository).
 
+# [1.1.1] - 5/9/2024
+### Added
+- Compatibility with older version of python back to 3.7
+
+### Changed
+- Updated Github actions to latest version per warning about Node.js 16 version being deprecated
+
 # [1.1.0] - 2/12/2024
 ### Added
 - Support for converting between the Buckeye corpus phonetic alphabet and IPA

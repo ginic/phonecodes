@@ -9,7 +9,7 @@ description = "Tools for loading dictionaries with various phonecodes (IPA, Call
 readme = "README.md"
 license = {file = "LICENSE.txt"}
 
-requires-python = ">=3.10"
+requires-python = ">=3.7"
 
 classifiers = [
     "Programming Language :: Python :: 3",
@@ -28,7 +28,7 @@ test = [
 
 # Dependencies that are useful only to developers, like an autoformatter and support for visualizations in jupyter notebooks go here
 dev = [
-    "ruff"
+    "ruff",
 ]
 
 [project.urls]
