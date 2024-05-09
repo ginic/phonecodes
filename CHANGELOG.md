@@ -10,6 +10,9 @@ You should also add project tags for each release in Github, see [Managing relea
 ### Added
 - Compatibility with older version of python back to 3.7
 
+### Changed
+- Updated Github actions to latest version per warning about Node.js 16 version being deprecated
+
 # [1.1.0] - 2/12/2024
 ### Added
 - Support for converting between the Buckeye corpus phonetic alphabet and IPA
