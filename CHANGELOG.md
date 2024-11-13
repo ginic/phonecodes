@@ -6,9 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 You should also add project tags for each release in Github, see [Managing releases in a repository](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository).
 
+# [Unreleased]
+
 # [1.1.2] - 11/13/2024
 ### Added
 - Support for the bilabial fricative mapping between Buckeye (BF) and IPA (β) 
+- Release creation instructions to CONTRIBUTIONS.md
 
 # [1.1.1] - 5/9/2024
 ### Added
