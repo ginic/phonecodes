@@ -601,6 +601,7 @@ _buckeye2ipa.update(
         "IHN": "ɪ̃",
         "ERN": "ɹ̩̃",
         "OYN": "ɔ̃ɪ̃",
+        "BF": "β",
     }
 )
 # Remove tone2ipa keys for Buckeye

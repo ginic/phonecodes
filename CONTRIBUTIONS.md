@@ -18,7 +18,6 @@ Issues that are open for contribution are given the following labels:
 - help-wanted
   - Issues with this tag are open for contribution and are suited for those with experience in contribution. 
 
-
 ## Issue reporting and help
 Report bugs or suggested features as issues on the [Github repo](https://github.com/ginic/phonecodes). Check to see whether your problem has already been reported before creating a new issue. Please keep in mind that we are a small team with many responsibilities and may take awhile to respond. 
 
@@ -49,3 +48,14 @@ To contribute to the project, do the following:
     - For example, "Fixed upload error to resolve Issue #987"
   - Include a short description of the changes you made
 
+## Creating a release
+For consistency, all version numbers for this project follow [semantic versioning](https://semver.org) with the format of integers A.B.C, where A is the “major” version, B is the “minor” version, and C is the “patch” version. Note that no version numbers should start with "v" anywhere, including on GitHub or in the CHANGELOG.md. 
+
+To create an official release, take the following steps:
+1. Decide what the new version number will be according to semantic versioning principles.
+2. Create a new branch from a commit that includes all the features and behavior that will be in the new version. On that branch, do the following:
+    - Update the CHANGELOG.md with a section for the new version number and its release date. In that section list included features under the appropriate "Added", "Changed", and "Removed" headers. 
+    - Update the project version number in pyproject.toml
+3. Create a pull request. Once the GitHub workflows for unit tests and publishing to TestPyPI pass, the pull request can be merged to the master branch. 
+4. Create an official release on GitHub following the [Creating a release instructions](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository#creating-a-release) from the merge commit in the previous step. Name and tag the release with your version number. Copy contents of the version's CHANGELOG.md section to the Release's description. 
+5. Validate that the GitHub workflow for publishing to PyPI passes and that the new version appears on https://pypi.org/project/phonecodes/#history. 
