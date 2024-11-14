@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 You should also add project tags for each release in Github, see [Managing releases in a repository](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository).
 
 # [Unreleased]
+
+# [1.1.4] - 11/14/2024
+### Changed
+- Remove GitHub release action from release GitHub workflow, as it doesn't work with the release structure laid out in CONTRIBUTIONS.md
+
 # [1.1.3] - 11/14/2024
 ### Changed
 - Version bump due to PyPI issues. You cannot re-upload artifacts even if they are deleted.
