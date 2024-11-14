@@ -13,6 +13,9 @@ You should also add project tags for each release in Github, see [Managing relea
 - Support for the bilabial fricative mapping between Buckeye (BF) and IPA (β) 
 - Release creation instructions to CONTRIBUTIONS.md
 
+### Changed
+- Updated GitHub actions to latest 3.0.0 version of sigstore/gh-action-sigstore-python
+
 # [1.1.1] - 5/9/2024
 ### Added
 - Compatibility with older version of python back to 3.7
