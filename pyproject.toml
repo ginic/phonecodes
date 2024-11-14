@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "phonecodes"
-version = "1.1.2"
+version = "1.1.3"
 description = "Tools for loading dictionaries with various phonecodes (IPA, Callhome, X-SAMPA, ARPABET, DISC=CELEX, Buckeye), for converting among those phonecodes, and for searching those dictionaries for word sequences matching a target."
 readme = "README.md"
 license = {file = "LICENSE.txt"}
