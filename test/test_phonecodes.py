@@ -81,6 +81,7 @@ def test_additional_buckeye_examples(ipa_str, buckeye_str):
             "R IX W AO R DX IH DCL B AY BCL B IH GCL T IH PCL P S",
         ),  # 'rewarded by big tips'
         ("bɪgtɪps", "bclbihgcltihpclps"),  # 'big tips' lower case no spaces
+        ("bɪgtɪps", "bihgclgtcltihps"),  # 'big tips' lower case no spaces, flip closures
     ],
 )
 def test_additional_timit_examples(ipa_str, timit_str):
