@@ -22,6 +22,7 @@ def sentences():
         "eng_no_stress": {
             "ipa": "ð ɪ s ɪ z ə t ɛ s t",
             "buckeye": "DH IH S IH Z AX T EH S T",
+            "timit": "DH IH S IH Z AX TCL T EH S TCL T",
         },
         "amh": {
             "word": "ይህ ፈተና ነው",

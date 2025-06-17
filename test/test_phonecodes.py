@@ -29,6 +29,7 @@ phonecode_cases = [
     # Buckeye conversion doesn't account for stress markers and language is ignored
     ("buckeye", "ipa", phonecodes.buckeye2ipa, "eng_no_stress"),
     ("ipa", "buckeye", phonecodes.ipa2buckeye, "eng_no_stress"),
+    ("timit", "ipa", phonecodes.timit2ipa, "eng_no_stress"),
 ]
 
 
@@ -47,12 +48,40 @@ def test_convert(in_code, out_code, fn_call, language, sentences):
     assert converted == expected
 
 
-def test_convert_value_error():
+@pytest.mark.parametrize(
+    "input_code, output_code",
+    [
+        ("arpabet", "buckeye"),
+        ("ipa", "timit"),
+    ],
+)
+def test_convert_value_error(input_code, output_code):
     with pytest.raises(ValueError):
-        phonecodes.convert("DH IH S IH Z AH0 T EH1 S T", "arpabet", "buckeye")
+        phonecodes.convert("DH IH S IH Z AH0 T EH1 S T", input_code, output_code)
 
 
 @pytest.mark.parametrize("ipa_str, buckeye_str", [("kæ̃n", "KAENN"), ("kæ̃n", "kaenn"), ("ʌpβoʊt", "AHPBFOWT")])
 def test_additional_buckeye_examples(ipa_str, buckeye_str):
     assert phonecodes.buckeye2ipa(buckeye_str) == ipa_str
     assert phonecodes.ipa2buckeye(ipa_str) == buckeye_str.upper()
+
+
+@pytest.mark.parametrize(
+    "ipa_str, timit_str",
+    [
+        (" tʃ ɑ k l ɨ t ", "h# ch aa kcl k l ix tcl t h#"),  # 'chocolate' with start/stop tokens and no initial closure
+        ("tʃ ɑ k l ɨ t", "tcl ch aa k l ix tcl t"),  # 'chocolate' with mixed closure inclusion
+        ("tʃ ɑ k l ɨ t", "tcl ch aa k l ix t"),  # 'chocolate' with mixed closure inclusion
+        ("tʃɑklɨt", "tclchaaklixtclt"),  # 'chocolate' with mixed closure inclusion, no spaces
+        ("tʃɑklɨt", "tclchaaklixt"),  # 'chocolate' with mixed closure inclusion, no spaces
+        ("dʒ oʊ k", "JH OW K"),  # 'joke' without closures
+        ("dʒ oʊ k", "DCL JH OW KCL K"),  # 'joke' with closures
+        (
+            "ɹ ɨ w ɔ ɹ ɾ ɪ d b aɪ b ɪ g t ɪ p s",
+            "R IX W AO R DX IH DCL B AY BCL B IH GCL T IH PCL P S",
+        ),  # 'rewarded by big tips'
+        ("bɪgtɪps", "bclbihgcltihpclps"),  # 'big tips' lower case no spaces
+    ],
+)
+def test_additional_timit_examples(ipa_str, timit_str):
+    assert phonecodes.timit2ipa(timit_str) == ipa_str

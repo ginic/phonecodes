@@ -539,36 +539,56 @@ _ipa2tone = {symbol: {v: k for k, v in d.items()} for symbol, d in _tone2ipa.ite
 
 # TIMIT is written in a variant of ARPABET that includes a couple
 # of non-standard allophones, and most significantly, includes
-# separate symbols for the closure and release portions of each stop.
+# separate symbols for the closure and release portions of each stop and affricate.
+# Because the TIMIT corpus has separate symbols for closure and release,
+# but IPA only has one corresponding symbol, we need to map all
+# possibilities for inputs with and without spaces.
+# This words because the search algorithm is greedy and matches the longest
+# substrings with closure first if they are present.
 _timit2ipa = _arpabet2ipa.copy()
+_timit2ipa.pop("WH")
+_timit2ipa.pop("ER0")
+_timit2ipa.pop("IH0")
+_timit2ipa.pop("AH0")
 _timit2ipa.update(
     {
         "AX": "ə",
         "AX-H": "ə̥",
         "AXR": "ɚ",
-        "B": "",
         "BCL": "b",
-        "D": "",
+        "BCLB": "b",
+        "BCL B": "b",
         "DCL": "d",
+        "DCLD": "d",
+        "DCLJH": "dʒ",
+        "DCL D": "d",
+        "DCL JH": "dʒ",
         "DX": "ɾ",
         "ENG": "ŋ̍",
         "EPI": "",
-        "G": "",
         "GCL": "g",
+        "GCLG": "g",
+        "GCL G": "g",
         "HV": "ɦ",
         "H#": "",
         "IX": "ɨ",
         "KCL": "k",
-        "K": "",
+        "KCLK": "k",
+        "KCL K": "k",
         "NX": "ɾ̃",
-        "P": "",
         "PAU": "",
         "PCL": "p",
-        "T": "",
+        "PCLP": "p",
+        "PCL P": "p",
         "TCL": "t",
+        "TCLT": "t",
+        "TCLCH": "tʃ",
+        "TCL T": "t",
+        "TCL CH": "tʃ",
         "UX": "ʉ",
     }
 )
+
 
 # The Buckeye alphabet is a version of ARPABET used to transcribe the Ohio State Buckeye corpus.
 # The major differences are in nasalized vowels and some syllabic consonants

@@ -1,5 +1,5 @@
 # phonecodes
-This library provides tools for converting between the [International Phonetic Alphabet (IPA)](https://en.wikipedia.org/wiki/International_Phonetic_Alphabet) and other phonetic alphabets used to transcribe speech, including Callhome, [X-SAMPA](https://en.wikipedia.org/wiki/X-SAMPA), [ARPABET](https://en.wikipedia.org/wiki/ARPABET), [DISC/CELEX](https://catalog.ldc.upenn.edu/LDC96L14) and [Buckeye Corpus Phonetic Alphabet](https://buckeyecorpus.osu.edu/). Additionally, tools for searching mappings between phonetic symbols and reading/writing pronounciation lexicon files in several standard formats are also provided.
+This library provides tools for converting between the [International Phonetic Alphabet (IPA)](https://en.wikipedia.org/wiki/International_Phonetic_Alphabet) and other phonetic alphabets used to transcribe speech, including Callhome, [X-SAMPA](https://en.wikipedia.org/wiki/X-SAMPA), [ARPABET](https://en.wikipedia.org/wiki/ARPABET), [DISC/CELEX](https://catalog.ldc.upenn.edu/LDC96L14), [Buckeye Corpus Phonetic Alphabet](https://buckeyecorpus.osu.edu/), and [TIMIT](https://catalog.ldc.upenn.edu/LDC93S1). Additionally, tools for searching mappings between phonetic symbols and reading/writing pronounciation lexicon files in several standard formats are also provided.
 
 These functionalities are useful for processing data for automatic speech recognition, text to speech, and linguistic analyses of speech.
 
@@ -14,7 +14,7 @@ If you want to convert to or from IPA to some other phonetic code, use `phonecod
 ```
 >>> from phonecodes import phonecodes
 >>> print(phonecodes.CODES) # available phonetic alphabets
-{'buckeye', 'disc', 'callhome', 'xsampa', 'arpabet', 'ipa'}
+{'arpabet', 'buckeye', 'ipa', 'timit', 'callhome', 'xsampa', 'disc'}
 >>> phonecodes.convert("DH IH S IH Z AH0 T EH1 S T", "arpabet", "ipa", "eng") # convert from IPA to ARPABET with language explicitly specified
 'ð ɪ s ɪ z ə t ˈɛ s t'
 >>> phonecodes.convert("ð ɪ s ɪ z ə t ˈɛ s t", "ipa", "arpabet") # convert from IPA to ARPABET with optional language left out
@@ -29,8 +29,9 @@ If you want to convert to or from IPA to some other phonetic code, use `phonecod
 'ð ɪ s ɪ z ə t ˈɛ s t'
 ```
 
-For 'arpabet', 'buckeye' and 'xsampa', specifying a language is optional and ignored by the code, since X-SAMPA is language agnostic and ARAPABET and Buckeye were designed to work only for English. 
-Note that for 'callhome' and 'disc' you should also specify a language code from the following lists:
+For 'arpabet', 'buckeye', 'timit' and 'xsampa', specifying a language is optional and ignored by the code, since X-SAMPA is language agnostic and ARAPABET, Buckeye, and TIMIT were designed to work only for English.
+
+For 'callhome' and 'disc' you should also specify a language code from the following lists:
 - DISC/CELEX: Dutch `'nld'`, English `'eng'`, German `'deu'`. Uses German if unspecified.
 - Callhome: Spanish `'spa'`, Egyptian Arabic `'arz'`, Mandarin Chinese `'cmn'`. You MUST specify an appropriate language code or you'll get a KeyError.
 
@@ -55,3 +56,5 @@ The supported corpus formats and their corresponding phonetic alphabets are as f
 | 'celex' | 'disc' | 'eng', 'ndl', 'deu' |
 | 'isle' | 'ipa' |  Not required |
 
+# Known Limitations
+- You cannot convert from IPA back t
