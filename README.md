@@ -57,4 +57,4 @@ The supported corpus formats and their corresponding phonetic alphabets are as f
 | 'isle' | 'ipa' |  Not required |
 
 # Known Limitations
-- You cannot convert from IPA back t
+- You cannot convert to TIMIT format from IPA or any other phonecode, because TIMIT marks closures of stops with separate symbols. There are no symbols corresponding to these closures in other phonecodes and the closure is not predictable from the transcription alone.
