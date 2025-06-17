@@ -7,8 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 You should also add project tags for each release in Github, see [Managing releases in a repository](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository).
 
 # [Unreleased]
+### Changed
+- Improved error messages about limited support for TIMIT
+
 ### Fixed
 - TestPyPI GitHub workflow ignores existing release numbers, so job doesn't fail when version numbers are re-used
+- Corrected handling of stop closure symbols in TIMIT and made TIMIT to IPA conversion more robust to variation in transcriptions of stop/affricates
 
 # [1.1.4] - 11/14/2024
 ### Changed
@@ -20,7 +24,7 @@ You should also add project tags for each release in Github, see [Managing relea
 
 # [1.1.2] - 11/13/2024
 ### Added
-- Support for the bilabial fricative mapping between Buckeye (BF) and IPA (β) 
+- Support for the bilabial fricative mapping between Buckeye (BF) and IPA (β)
 - Release creation instructions to CONTRIBUTIONS.md
 
 ### Changed
