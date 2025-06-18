@@ -82,6 +82,22 @@ def test_additional_buckeye_examples(ipa_str, buckeye_str):
         ),  # 'rewarded by big tips'
         ("bɪgtɪps", "bclbihgcltihpclps"),  # 'big tips' lower case no spaces
         ("bɪgtɪps", "bihgclgtcltihps"),  # 'big tips' lower case no spaces, flip closures
+        # 'This has been attributed to helium film flow in the vapor pressure thermometer.'
+        (
+            "ðɪs hɛz bɛn ɪtʃɪbʉɾɪd tʉ ɦɪliɨm fɪlm floʊ ən ðɨ veɪpə pɹɛʃɝ θəmɑmɨɾɚ",
+            "DHIHS HHEHZ BCLBEHN IHTCLCHIHBCLBUXDXIHDCL TUX HVIHLIYIXM FIHLM FLOW AXN DHIX VEYPCLPAX PCLPREHSHER THAXMAAMIXDXAXR",
+        ),
+        # 'About dawn he got up to blow.'
+        ("ə̥baʊtdɔnɦigɑɾʌptɨbloʊ", "AX-HBCLBAWTCLDAONHVIYGCLGAADXAHPCLTIXBCLBLOW"),
+        # 'As we ate, we talked.'
+        ("ʔæzwieɪtwitɔkt", "QAEZWIYEYTCLWIYTCLTAOKCLT"),
+        # 'The overweight charmer could slip poison into anyone's tea.'
+        # Note that the space is lost at the word boundary between 'overweight charmer'
+        # and 'slip poison'.
+        (
+            "ði oʊvɚweɪtʃɑɹmɚ kʊd slɪpɔɪzn̩ ɪntʔ ɛɾ̃iwənz ti",
+            "DHIY OWVAXRWEYTCL CHAARMAXR KCLKUHDCLD SLIHPCL POYZEN IHNTCLTQ EHNXIYWAXNZ TCLTIY",
+        ),
     ],
 )
 def test_additional_timit_examples(ipa_str, timit_str):
