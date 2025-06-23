@@ -1,6 +1,6 @@
 """
 A set of convenience functions for converting among different phone codes.
-Usage: 
+Usage:
 from phonecodes import phonecodes
 print phonecodes.CODES   # the known phone codes
 print phonecodes.LANGUAGES # the known languages
@@ -18,7 +18,7 @@ phonecodes.consonants
 """
 import phonecodes.phonecode_tables as phonecode_tables
 
-CODES = set(("ipa", "arpabet", "xsampa", "disc", "callhome", "buckeye"))
+CODES = set(("ipa", "arpabet", "xsampa", "disc", "callhome", "buckeye", "timit"))
 LANGUAGES = set(("eng", "deu", "nld", "arz", "cmn", "spa", "yue", "lao", "vie"))
 
 vowels = phonecode_tables._ipa_vowels
@@ -193,8 +193,14 @@ def timit2ipa(x, language=None):
     """Convert TIMIT phone codes to IPA"""
     x = x.upper()
     (il, ttf) = translate_string(x, phonecode_tables._timit2ipa)
-    ol = attach_tones_to_vowels(il, phonecode_tables._ipa_stressmarkers, phonecode_tables._ipa_vowels, -1, -1)
-    return "".join(ol)
+    return "".join(il)
+
+
+def ipa2timit(x, language=None):
+    raise ValueError(
+        "Converting to 'timit' is unsupported, because TIMIT closure symbols for stops"
+        " cannot be determined from text."
+    )
 
 
 def buckeye2ipa(x, language=None):
@@ -221,6 +227,7 @@ _convertfuncs = {
     "disc": (disc2ipa, ipa2disc),
     "callhome": (callhome2ipa, ipa2callhome),
     "buckeye": (buckeye2ipa, ipa2buckeye),
+    "timit": (timit2ipa, ipa2timit),
 }
 
 
@@ -253,7 +260,7 @@ def convert(s0, c0, c1, language=None):
     elif c0 != "ipa" and c1 == "ipa":
         return _convertfuncs[c0][0](s0, language)
     else:
-        raise ValueError(f"Must convert to/from ipa, not {c0} to {c1}")
+        raise ValueError(f"Must convert to/from 'ipa', not '{c0}' to '{c1}'")
 
 
 def convertlist(l0, c0, c1, language):
