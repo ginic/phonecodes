@@ -1,6 +1,7 @@
 """Load some pronlexes from the 'fixtures' subdirectory,
 test phone code conversion, and test both word and phone searches.
 """
+
 import phonecodes.phonecodes as phonecodes
 
 import pytest
@@ -69,7 +70,10 @@ def test_additional_buckeye_examples(ipa_str, buckeye_str):
 @pytest.mark.parametrize(
     "ipa_str, timit_str",
     [
-        (" tʃ ɑ k l ɨ t ", "h# ch aa kcl k l ix tcl t h#"),  # 'chocolate' with start/stop tokens and no initial closure
+        (
+            " tʃ ɑ k l ɨ t ",
+            "h# ch aa kcl k l ix tcl t h#",
+        ),  # 'chocolate' with start/stop tokens and no initial closure
         ("tʃ ɑ k l ɨ t", "tcl ch aa k l ix tcl t"),  # 'chocolate' with mixed closure inclusion
         ("tʃ ɑ k l ɨ t", "tcl ch aa k l ix t"),  # 'chocolate' with mixed closure inclusion
         ("tʃɑklɨt", "tclchaaklixtclt"),  # 'chocolate' with mixed closure inclusion, no spaces
@@ -84,7 +88,7 @@ def test_additional_buckeye_examples(ipa_str, buckeye_str):
         ("bɪgtɪps", "bihgclgtcltihps"),  # 'big tips' lower case no spaces, flip closures
         # 'This has been attributed to helium film flow in the vapor pressure thermometer.'
         (
-            "ðɪs hɛz bɛn ɪtʃɪbʉɾɪd tʉ ɦɪliɨm fɪlm floʊ ən ðɨ veɪpə pɹɛʃɝ θəmɑmɨɾɚ",
+            "ðɪs hɛz bɛn ɪtʃɪbʉɾɪd tʉ ɦɪliɨm fɪlm floʊ ən ðɨ veɪpə pɹɛʃɹ̩ θəmɑmɨɾɚ",
             "DHIHS HHEHZ BCLBEHN IHTCLCHIHBCLBUXDXIHDCL TUX HVIHLIYIXM FIHLM FLOW AXN DHIX VEYPCLPAX PCLPREHSHER THAXMAAMIXDXAXR",
         ),
         # 'About dawn he got up to blow.'

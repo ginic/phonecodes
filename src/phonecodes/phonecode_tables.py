@@ -1,6 +1,7 @@
 """
 Tables mapping other phonecodes to/from IPA
 """
+
 import re
 
 ###############################################################
@@ -564,7 +565,8 @@ _timit2ipa.update(
         "DCL D": "d",
         "DCL JH": "dʒ",
         "DX": "ɾ",
-        "ENG": "ŋ̍",
+        "ENG": "ŋ̩",
+        "ER": "ɹ̩",
         "EPI": "",
         "GCL": "g",
         "GCLG": "g",
