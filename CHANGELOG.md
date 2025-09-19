@@ -8,6 +8,10 @@ You should also add project tags for each release in Github, see [Managing relea
 
 # [Unreleased]
 
+# [1.2.2] - 9/19/2025
+### Changed
+- Changed mappings to always use 'ɡ' (Unicode 0261) from Unicode IPA Extension in outputs, rather than mix of 'ɡ' (Unicode 0261) and 'g' (Unicode 0067)
+
 # [1.2.1] - 9/15/2025
 ### Changed
 - Updated TIMIT conversions to IPA to use syllabic diacritics, mapping 'ER' to 'ɹ̩' and 'ENG' to 'ŋ̩'

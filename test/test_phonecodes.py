@@ -61,7 +61,9 @@ def test_convert_value_error(input_code, output_code):
         phonecodes.convert("DH IH S IH Z AH0 T EH1 S T", input_code, output_code)
 
 
-@pytest.mark.parametrize("ipa_str, buckeye_str", [("kæ̃n", "KAENN"), ("kæ̃n", "kaenn"), ("ʌpβoʊt", "AHPBFOWT")])
+@pytest.mark.parametrize(
+    "ipa_str, buckeye_str", [("kæ̃n", "KAENN"), ("kæ̃n", "kaenn"), ("ʌpβoʊt", "AHPBFOWT"), ("bɪɡtɪps", "BIHGTIHPS")]
+)
 def test_additional_buckeye_examples(ipa_str, buckeye_str):
     assert phonecodes.buckeye2ipa(buckeye_str) == ipa_str
     assert phonecodes.ipa2buckeye(ipa_str) == buckeye_str.upper()
@@ -81,18 +83,18 @@ def test_additional_buckeye_examples(ipa_str, buckeye_str):
         ("dʒ oʊ k", "JH OW K"),  # 'joke' without closures
         ("dʒ oʊ k", "DCL JH OW KCL K"),  # 'joke' with closures
         (
-            "ɹ ɨ w ɔ ɹ ɾ ɪ d b aɪ b ɪ g t ɪ p s",
+            "ɹ ɨ w ɔ ɹ ɾ ɪ d b aɪ b ɪ ɡ t ɪ p s",
             "R IX W AO R DX IH DCL B AY BCL B IH GCL T IH PCL P S",
         ),  # 'rewarded by big tips'
-        ("bɪgtɪps", "bclbihgcltihpclps"),  # 'big tips' lower case no spaces
-        ("bɪgtɪps", "bihgclgtcltihps"),  # 'big tips' lower case no spaces, flip closures
+        ("bɪɡtɪps", "bclbihgcltihpclps"),  # 'big tips' lower case no spaces
+        ("bɪɡtɪps", "bihgclgtcltihps"),  # 'big tips' lower case no spaces, flip closures
         # 'This has been attributed to helium film flow in the vapor pressure thermometer.'
         (
             "ðɪs hɛz bɛn ɪtʃɪbʉɾɪd tʉ ɦɪliɨm fɪlm floʊ ən ðɨ veɪpə pɹɛʃɹ̩ θəmɑmɨɾɚ",
             "DHIHS HHEHZ BCLBEHN IHTCLCHIHBCLBUXDXIHDCL TUX HVIHLIYIXM FIHLM FLOW AXN DHIX VEYPCLPAX PCLPREHSHER THAXMAAMIXDXAXR",
         ),
         # 'About dawn he got up to blow.'
-        ("ə̥baʊtdɔnɦigɑɾʌptɨbloʊ", "AX-HBCLBAWTCLDAONHVIYGCLGAADXAHPCLTIXBCLBLOW"),
+        ("ə̥baʊtdɔnɦiɡɑɾʌptɨbloʊ", "AX-HBCLBAWTCLDAONHVIYGCLGAADXAHPCLTIXBCLBLOW"),
         # 'As we ate, we talked.'
         ("ʔæzwieɪtwitɔkt", "QAEZWIYEYTCLWIYTCLTAOKCLT"),
         # 'The overweight charmer could slip poison into anyone's tea.'
