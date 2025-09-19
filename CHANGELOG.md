@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 You should also add project tags for each release in Github, see [Managing releases in a repository](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository).
 
 # [Unreleased]
+### Changed
+- Changed mappings to always use 'ɡ' (Unicode 0261) from Unicode IPA Extension in outputs, rather than mix of 'ɡ' (Unicode 0261) and 'g' (Unicode 0067)
 
 # [1.2.1] - 9/15/2025
 ### Changed
