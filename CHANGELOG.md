@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 You should also add project tags for each release in Github, see [Managing releases in a repository](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository).
 
 # [Unreleased]
+### Changed
+- Added python 3.14 to package and pytest GitHub actions
 
 # [1.2.2] - 9/19/2025
 ### Changed
