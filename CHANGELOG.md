@@ -9,6 +9,7 @@ You should also add project tags for each release in Github, see [Managing relea
 # [Unreleased]
 ### Changed
 - Added python 3.14 to package and pytest GitHub actions
+- Change nasalized diacritics to use Unicode 0303 whenever possible instead of full Unicode IPA Extension symbols. Mostly affects Buckeye.
 
 # [1.2.2] - 9/19/2025
 ### Changed
