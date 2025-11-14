@@ -537,7 +537,7 @@ _arpabet_vowels = set((k for k in _arpabet2ipa.keys() if k[0] in "AEIOU"))
 
 _ipa2arpabet = {v: k for k, v in _arpabet2ipa.items()}
 _ipa2tone = {symbol: {v: k for k, v in d.items()} for symbol, d in _tone2ipa.items()}
-
+########################################################################
 # TIMIT is written in a variant of ARPABET that includes a couple
 # of non-standard allophones, and most significantly, includes
 # separate symbols for the closure and release portions of each stop and affricate.
@@ -591,7 +591,7 @@ _timit2ipa.update(
     }
 )
 
-
+########################################################################
 # The Buckeye alphabet is a version of ARPABET used to transcribe the Ohio State Buckeye corpus.
 # The major differences are in nasalized vowels and some syllabic consonants
 _buckeye2ipa = _arpabet2ipa.copy()
@@ -632,6 +632,26 @@ for tone_key in _tone2ipa["eng"].keys():
 
 
 _ipa2buckeye = {v: k for k, v in _buckeye2ipa.items()}
+
+_buckeye_ipa_reductions = {
+    "æ̃": "æ",
+    "ɔ̃": "ɔ",
+    "ə̃": "ə",
+    "ĩ": "i",
+    "ẽɪ̃": "eɪ",
+    "õʊ̃": "oʊ",
+    "ãɪ̃": "aɪ",
+    "ɑ̃": "ɑ",
+    "ũ": "u",
+    "ɾ̃": "ɾ",
+    "ɛ̃": "ɛ",
+    "ʊ̃": "ʊ",
+    "ãʊ̃": "aʊ",
+    "ʌ̃": "ʌ",
+    "ɪ̃": "ɪ",
+    "ɹ̩̃": "ɹ̩",
+    "ɔ̃ɪ̃": "ɔɪ",
+}
 
 
 #######################################################################
