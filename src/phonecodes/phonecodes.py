@@ -16,6 +16,7 @@ phonecodes.consonants
 # list known IPA symbols of vowels, consonants.
 # for other tables, see phonecode_tables.py
 """
+
 import phonecodes.phonecode_tables as phonecode_tables
 
 CODES = set(("ipa", "arpabet", "xsampa", "disc", "callhome", "buckeye", "timit"))
@@ -198,8 +199,7 @@ def timit2ipa(x, language=None):
 
 def ipa2timit(x, language=None):
     raise ValueError(
-        "Converting to 'timit' is unsupported, because TIMIT closure symbols for stops"
-        " cannot be determined from text."
+        "Converting to 'timit' is unsupported, because TIMIT closure symbols for stops cannot be determined from text."
     )
 
 
@@ -236,7 +236,7 @@ def _verify_code(code):
         raise ValueError(f"{code} is not a valid phonecode. Choose from: {' '.join(CODES)}")
 
 
-def convert(s0, c0, c1, language=None):
+def convert(s0, c0, c1, language=None, post_ipa_mapping: str[str, str] | None = None):
     """Convert a string between a given phonecode and IPA
 
     Args:
@@ -263,5 +263,23 @@ def convert(s0, c0, c1, language=None):
         raise ValueError(f"Must convert to/from 'ipa', not '{c0}' to '{c1}'")
 
 
-def convertlist(l0, c0, c1, language):
-    return [convert(s0, c0, c1, language) for s0 in l0]
+def convertlist(l0, c0, c1, language, post_ipa_mapping: dict[str, str] | None = None):
+    return [convert(s0, c0, c1, language, post_ipa_mapping) for s0 in l0]
+
+
+def _post_process_ipa_inventories(post_ipa_mapping: dict[str, str]):
+    keys_sorted_by_length = sorted(post_ipa_mapping.keys(), key=len)
+    for k in keys_sorted_by_length:
+        # TODO
+        pass
+
+
+def _validate_post_processing_inventory_map(symbol_inventory_map: dict[str, str]):
+    """The
+    Checks that input key is a substring
+
+    Args:
+        symbol_inventory_map: _description_
+    """
+    # TODO
+    pass

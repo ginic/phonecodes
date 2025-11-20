@@ -1,6 +1,7 @@
-""" Load some pronlexes from the 'fixtures' subdirectory, 
+"""Load some pronlexes from the 'fixtures' subdirectory,
 test phone code conversion, and test both word and phone searches.
 """
+
 import re
 
 import pytest

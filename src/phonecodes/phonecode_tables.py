@@ -541,6 +541,10 @@ _ipa2tone = {symbol: {v: k for k, v in d.items()} for symbol, d in _tone2ipa.ite
 # TIMIT is written in a variant of ARPABET that includes a couple
 # of non-standard allophones, and most significantly, includes
 # separate symbols for the closure and release portions of each stop and affricate.
+# This is the official mapping published with the TIMIT corpus, but you
+# likely want to post-process to one of the standard shared IPA inventories
+# defined below.
+#
 # Because the TIMIT corpus has separate symbols for closure and release,
 # but IPA only has one corresponding symbol, we need to map all
 # possibilities for inputs with and without spaces.
@@ -566,7 +570,7 @@ _timit2ipa.update(
         "DCL JH": "dʒ",
         "DX": "ɾ",
         "ENG": "ŋ̩",
-        "ER": "ɹ̩",
+        "ER": "ɝ",
         "EPI": "",
         "GCL": "ɡ",
         "GCLG": "ɡ",
@@ -608,7 +612,7 @@ _buckeye2ipa.update(
         "AXN": "ə̃",
         "IYN": "ĩ",
         "EYN": "ẽɪ̃",
-        "OWN": "õʊ̃",
+        "OWN": "õʊ̃",
         "DX": "ɾ",
         "AYN": "ãɪ̃",
         "AAN": "ɑ̃",
@@ -633,7 +637,6 @@ for tone_key in _tone2ipa["eng"].keys():
 
 _ipa2buckeye = {v: k for k, v in _buckeye2ipa.items()}
 
-
 #######################################################################
 # IPA
 _ipa_vowels = set("aeiouyɑɒɛɪɔʘʊʌʏəɘæʉɨøɜɞɐɤɵœɶ") | set(("ɪ̈", "ʊ̈"))
@@ -648,3 +651,77 @@ _ipa_tones |= set(x + y for x in _ipa_tones for y in _ipa_tones)
 _ipa_tones |= set(x + y for x in _ipa_tones for y in _ipa_tones)
 
 _ipa_symbols = _ipa_vowels | _ipa_consonants | _ipa_diacritics
+
+#######################################################################
+# Shared IPA inventories
+# Many projects will actually use a subset of the full IPA inventory and it's useful to have an
+# explicitly defined mapping to transform and validate.
+# These are some standard mappings from an original IPA inventory to a subset of IPA symbols.
+#
+# These mappings are expected to be one-to-many reductions,
+# but can support multi-character symbols. Symbols will be re-mapped in
+# order of longest key to shortest.
+
+# This is the standard TIMIT label reduction described by Lee and Hon (1989)
+# described in https://drive.google.com/file/d/1QI4_omp8E9EvO71jZQBGdH2GV6Pn7FPh/view?usp=sharing.
+# Closure symbols are also removed using the standard reduction, but
+# this is already handled by _timit2ipa
+STANDARD_TIMIT_IPA_REDUCTION = {
+    "ɔ": "ɑ",
+    "ɚ": "ɝ",
+    "ʒ": "ʃ",
+    "ɦ": "h",
+    "ɨ": "ɪ",
+    "ʉ": "u",
+    # Syllabic markers are dropped
+    "l̩": "l",
+    "m̩": "m",
+    "n̩": "n",
+    "ŋ̩": "ŋ",
+    "ʔ": "",
+    # "ə" and "ʌ" are collapsed
+    "ə": "ʌ",
+    "ə̥": "ʌ",
+}
+
+# In many cases it is important that the mapped subsets match,
+# especially working with models that are trained on one corpus and evaluated on another.
+# These dictionaries map TIMIT and Buckeye IPA inventories to the same IPA subset in post-processing.
+BUCKEYE_IPA_TO_TIMIT_BUCKEYE_SHARED = {
+    # Reduced nasalized vowels and diphthongs to non-nasal versions
+    "ãʊ̃": "aʊ",
+    "ẽɪ̃": "eɪ",
+    "õʊ̃": "oʊ",
+    "ãɪ̃": "aɪ",
+    "ɔ̃ɪ̃": "ɔɪ",
+    "æ̃": "æ",
+    "ɔ̃": "ɔ",
+    "ə̃": "ə",
+    "ĩ": "i",
+    "ɑ̃": "ɑ",
+    "ũ": "u",
+    "ɛ̃": "ɛ",
+    "ʊ̃": "ʊ",
+    "ɪ̃": "ɪ",
+    "ɹ̩̃": "ɹ̩",
+    # β doesn't appear in TIMIT annotations, so must be reduced
+    "β": "f",
+    # Nasalized flap is too inconsistently annotated, so reduce to 'n'
+    "ɾ̃": "n",
+    # Use schwa in final vocabulary
+    "ʌ": "ə",
+    "ʌ̃": "ə",
+}
+TIMIT_IPA_TO_TIMIT_BUCKEYE_SHARED = {
+    # These symbols are not present in Buckeye IPA, so must be reduced
+    "ɦ": "h",
+    "ɨ": "ɪ",
+    "ʉ": "u",
+    # Nasalized flap is too inconsistently annotated, so reduce to 'n'
+    "ɾ̃": "n",
+    # Vocalic r all map to ɹ̩
+    "ɝ": "ɹ̩",
+    "ɚ": "ɹ̩",
+    # Use schwa in final vocabulary
+    "ʌ": "ə",
+}
