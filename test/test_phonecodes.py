@@ -90,7 +90,7 @@ def test_additional_buckeye_examples(ipa_str, buckeye_str):
         ("bɪɡtɪps", "bihgclgtcltihps"),  # 'big tips' lower case no spaces, flip closures
         # 'This has been attributed to helium film flow in the vapor pressure thermometer.'
         (
-            "ðɪs hɛz bɛn ɪtʃɪbʉɾɪd tʉ ɦɪliɨm fɪlm floʊ ən ðɨ veɪpə pɹɛʃɹ̩ θəmɑmɨɾɚ",
+            "ðɪs hɛz bɛn ɪtʃɪbʉɾɪd tʉ ɦɪliɨm fɪlm floʊ ən ðɨ veɪpə pɹɛʃɝ θəmɑmɨɾɚ",
             "DHIHS HHEHZ BCLBEHN IHTCLCHIHBCLBUXDXIHDCL TUX HVIHLIYIXM FIHLM FLOW AXN DHIX VEYPCLPAX PCLPREHSHER THAXMAAMIXDXAXR",
         ),
         # 'About dawn he got up to blow.'
@@ -108,3 +108,24 @@ def test_additional_buckeye_examples(ipa_str, buckeye_str):
 )
 def test_additional_timit_examples(ipa_str, timit_str):
     assert phonecodes.timit2ipa(timit_str) == ipa_str
+
+
+@pytest.mark.parametrize(
+    "mapping, expected_value",
+    [
+        # Valid - key set and value set are disjoint
+        ({"a": "x", "b": "y"}, []),
+        ({"a": "b", "bc": "a"}, [("a", "bc")]),
+        # Diacritical markers alone won't cause cascasdes
+        ({"◌̩": "", "ɹ̩": "ɝ"}, []),
+        # These will cause cascades
+        ({"ax": "b", "bc": "d"}, [("ax", "bc")]),
+        ({"r": "ɹ", "ɹ̩": "ɝ"}, [("r", "ɹ̩")]),
+        # These standard reductions should not have any cascading changes
+        (phonecodes.phonecode_tables.STANDARD_TIMIT_IPA_REDUCTION, []),
+        (phonecodes.phonecode_tables.BUCKEYE_IPA_TO_TIMIT_BUCKEYE_SHARED, []),
+        (phonecodes.phonecode_tables.TIMIT_IPA_TO_TIMIT_BUCKEYE_SHARED, []),
+    ],
+)
+def test_find_cascading_keys_in_inventory_map(mapping, expected_value):
+    assert phonecodes._find_cascading_keys_in_inventory_map(mapping) == expected_value

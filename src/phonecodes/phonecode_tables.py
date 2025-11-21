@@ -1,5 +1,8 @@
 """
-Tables mapping other phonecodes to/from IPA
+Tables mapping other phonecodes to/from IPA.
+Note that working with unicode symbols can be tricky.
+Refer to the Unicode standards at https://www.unicode.org/charts/ and
+check symbols against a Unicode character inspector like https://apps.timwhitlock.info/unicode/inspect.
 """
 
 import re
@@ -657,10 +660,15 @@ _ipa_symbols = _ipa_vowels | _ipa_consonants | _ipa_diacritics
 # Many projects will actually use a subset of the full IPA inventory and it's useful to have an
 # explicitly defined mapping to transform and validate.
 # These are some standard mappings from an original IPA inventory to a subset of IPA symbols.
-#
 # These mappings are expected to be one-to-many reductions,
-# but can support multi-character symbols. Symbols will be re-mapped in
-# order of longest key to shortest.
+# Since each replacements are done by iterating over the mapping, cascading
+# replacements are supported, but they are not recommended.
+# Use the functions in the phonecodes module to check for cascading replacements.
+
+# N.B. This assumes mapping takes place in dictionary insertion order (this is guaranteed since python 3.7).
+#
+
+# but can support multi-character symbols.
 
 # This is the standard TIMIT label reduction described by Lee and Hon (1989)
 # described in https://drive.google.com/file/d/1QI4_omp8E9EvO71jZQBGdH2GV6Pn7FPh/view?usp=sharing.

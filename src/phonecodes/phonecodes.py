@@ -236,7 +236,7 @@ def _verify_code(code):
         raise ValueError(f"{code} is not a valid phonecode. Choose from: {' '.join(CODES)}")
 
 
-def convert(s0, c0, c1, language=None, post_ipa_mapping: str[str, str] | None = None):
+def convert(s0, c0, c1, language=None, post_ipa_mapping: dict[str, str] | None = None):
     """Convert a string between a given phonecode and IPA
 
     Args:
@@ -268,18 +268,30 @@ def convertlist(l0, c0, c1, language, post_ipa_mapping: dict[str, str] | None = 
 
 
 def _post_process_ipa_inventories(post_ipa_mapping: dict[str, str]):
-    keys_sorted_by_length = sorted(post_ipa_mapping.keys(), key=len)
-    for k in keys_sorted_by_length:
-        # TODO
-        pass
-
-
-def _validate_post_processing_inventory_map(symbol_inventory_map: dict[str, str]):
-    """The
-    Checks that input key is a substring
-
-    Args:
-        symbol_inventory_map: _description_
-    """
     # TODO
     pass
+
+
+def _find_cascading_keys_in_inventory_map(symbol_inventory_map: dict[str, str]) -> list[tuple[str, str]]:
+    """Returns any keys that might have values that would cascade to later keys during replacement.
+    Used as a warning if there seem to be cascading replacements involving the same symbol.
+    This doesn't impact the behavior of the substitution, but serves as a check
+    against unexpected cascading replacements.
+
+    Args:
+        symbol_inventory_map: An ordered dictionary mapping substrings to their desired replacement values.
+    """
+    result = []
+    ordered_keys = list(symbol_inventory_map.keys())
+    for i, k1 in enumerate(ordered_keys[:-1]):
+        current_value = symbol_inventory_map[k1]
+
+        # Skip empty strings
+        if current_value == "":
+            continue
+
+        for k2 in ordered_keys[i + 1 :]:
+            if current_value in k2:
+                result.append((k1, k2))
+
+    return result
