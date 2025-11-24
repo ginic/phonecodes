@@ -66,7 +66,7 @@ class Phonecodes(Enum):
     ARPABET2IPA = ARPABET_KEY, IPA_KEY
     IPA2ARPABET = IPA_KEY, ARPABET_KEY
 
-    # TIMIT
+    # TIMIT - There is no way to convert from IPA to TIMIT due to closure symbols
     TIMIT2IPA = TIMIT_KEY, IPA_KEY
 
     # Buckeye
@@ -77,6 +77,20 @@ class Phonecodes(Enum):
         self.in_code = in_code
         self.out_code = out_code
         self.language = language
+
+    @classmethod
+    def as_member(cls, in_code, out_code, language=None):
+        valid_codes = set(item.value for item in cls)
+        phonecode_tuple = (in_code, out_code, language)
+        if phonecode_tuple in valid_codes:
+            return Phonecodes((in_code, out_code, language))
+
+        phonecode_tuple = (in_code, out_code)
+        if (in_code, out_code) in valid_codes:
+            return Phonecodes((in_code, out_code))
+        raise ValueError(
+            f"Phonecode pairing {phonecode_tuple} is not valid. Must convert to/from 'ipa' in supported languages or leave language unspecified."
+        )
 
 
 # Which symbol mapping will be used in conversion?
@@ -93,9 +107,17 @@ _phonecode_lookup = {
     Phonecodes.CALLHOME2IPA_ARZ: phonecode_tables._callhome2ipa[Phonecodes.CALLHOME2IPA_ARZ.language],
     Phonecodes.CALLHOME2IPA_CMN: phonecode_tables._callhome2ipa[Phonecodes.CALLHOME2IPA_CMN.language],
     Phonecodes.CALLHOME2IPA_SPA: phonecode_tables._callhome2ipa[Phonecodes.CALLHOME2IPA_SPA.language],
+    Phonecodes.IPA2CALLHOME_ARZ: phonecode_tables._ipa2callhome[Phonecodes.IPA2CALLHOME_ARZ.language],
+    Phonecodes.IPA2CALLHOME_CMN: phonecode_tables._ipa2callhome[Phonecodes.IPA2CALLHOME_CMN.language],
+    Phonecodes.IPA2CALLHOME_SPA: phonecode_tables._ipa2callhome[Phonecodes.IPA2CALLHOME_SPA.language],
     # ARPABET
     Phonecodes.ARPABET2IPA: phonecode_tables._arpabet2ipa,
     Phonecodes.IPA2ARPABET: phonecode_tables._ipa2arpabet,
+    # Buckeye
+    Phonecodes.BUCKEYE2IPA: phonecode_tables._buckeye2ipa,
+    Phonecodes.IPA2ARPABET: phonecode_tables._ipa2buckeye,
+    # TIMIT
+    Phonecodes.TIMIT2IPA: phonecode_tables._timit2ipa,
 }
 
 
@@ -133,6 +155,10 @@ _tone_stress_settings = {
     Phonecodes.IPA2CALLHOME_SPA: AttachStressTonesConfig(
         "012", phonecode_tables._callhome_vowels[Phonecodes.IPA2CALLHOME_SPA.language], 1, 1
     ),
+    Phonecodes.ARPABET2IPA: AttachStressTonesConfig(
+        phonecode_tables._ipa_stressmarkers, phonecode_tables._ipa_vowels, -1, -1
+    ),
+    Phonecodes.IPA2ARPABET: AttachStressTonesConfig("012", phonecode_tables._arpabet_vowels, 1, 1),
 }
 
 
@@ -355,14 +381,7 @@ def convert(s0, c0, c1, language=None, post_ipa_mapping: dict[str, str] | None =
     _verify_code(c1)
 
     # Get the right enumerator for looking up mappings
-    valid_phonecodes = Phonecodes.__members__.values()
-    phonecode_enum = (c0, c1, language)
-    if phonecode_enum not in valid_phonecodes:
-        phonecode_enum = (c0, c1, None)  # Fall back to language not specified
-        if phonecode_enum not in valid_phonecodes:
-            raise ValueError(
-                f"Phonecode pairing ({c0, c1, language}) is not valid. Must convert to/from 'ipa' in supported languages or leave language unspecified."
-            )
+    phonecode_enum = Phonecodes.as_member(c0, c1, language)
 
     # Most basic mapping
     input_string = s0
