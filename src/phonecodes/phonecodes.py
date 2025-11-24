@@ -222,14 +222,12 @@ def attach_tones_to_vowels(il: list[str], tones, vowels, searchstep, catdir) -> 
 # X-SAMPA
 def ipa2xsampa(x, language=None):
     """Attempt to return X-SAMPA equivalent of an IPA phone x."""
-    (tl, ttf) = translate_string(x, phonecode_tables._ipa2xsampa)
-    return "".join(tl)
+    return convert(x, IPA_KEY, XSAMPA_KEY, language)
 
 
 def xsampa2ipa(x, language=None):
     """Return the IPA equivalent of X-SAMPA phone x."""
-    (tl, ttf) = translate_string(x, phonecode_tables._xsampa_and_diac2ipa)
-    return "".join(tl)
+    return convert(x, XSAMPA_KEY, IPA_KEY, language)
 
 
 ######################################################################
@@ -242,82 +240,41 @@ def tone2ipa(n, language):
 # DISC, the system used by CELEX
 def disc2ipa(x, language=None):
     """Convert DISC symbol x into IPA, for language L"""
-    if language == "nld":
-        (tl, ttf) = translate_string(x, phonecode_tables._disc2ipa_dutch)
-        return "".join(tl)
-    elif language == "eng":
-        (tl, ttf) = translate_string(x, phonecode_tables._disc2ipa_english)
-        return "".join(tl)
-    else:
-        (tl, ttf) = translate_string(x, phonecode_tables._disc2ipa)
-        return "".join(tl)
+    return convert(x, DISC_KEY, IPA_KEY, language)
 
 
 def ipa2disc(x, language=None):
     """Convert IPA symbol x into DISC"""
-    (tl, ttf) = translate_string(x, phonecode_tables._ipa2disc)
-    return "".join(tl)
+    return convert(x, IPA_KEY, DISC_KEY, language)
 
 
 #######################################################################
 # Callhome phone codes
 def callhome2ipa(x, language):
     """Convert callhome phone symbol x into IPA for given language"""
-    (il, ttf) = translate_string(x, phonecode_tables._callhome2ipa[language])
-    if language == "arz":
-        ol = attach_tones_to_vowels(
-            il,
-            phonecode_tables._ipa_stressmarkers,
-            phonecode_tables._ipa_vowels,
-            -1,
-            -1,
-        )
-    elif language == "cmn":
-        ol = attach_tones_to_vowels(il, phonecode_tables._ipa_tones, phonecode_tables._ipa_vowels, -1, 1)
-    elif language == "spa":
-        ol = attach_tones_to_vowels(
-            il,
-            phonecode_tables._ipa_stressmarkers,
-            phonecode_tables._ipa_vowels,
-            -1,
-            -1,
-        )
-    return "".join(ol)
+    return convert(x, CALLHOME_KEY, IPA_KEY, language)
 
 
 def ipa2callhome(x, language=None):
     """Convert IPA symbol x into callhome notation for given language"""
-    (il, ttf) = translate_string(x, phonecode_tables._ipa2callhome[language])
-    if language == "arz":
-        ol = attach_tones_to_vowels(il, "012", phonecode_tables._callhome_vowels["arz"], 1, 1)
-    elif language == "cmn":
-        ol = attach_tones_to_vowels(il, "012345", phonecode_tables._callhome_vowels["cmn"], -1, 1)
-    elif language == "spa":
-        ol = attach_tones_to_vowels(il, "012", phonecode_tables._callhome_vowels["spa"], 1, 1)
-    return "".join(ol)
+    return convert(x, IPA_KEY, CALLHOME_KEY, language)
 
 
 #########################################################################
 # ARPABET, TIMIT, Buckeye
 def arpabet2ipa(x, language=None):
     """Convert ARPABET symbol X to IPA"""
-    (il, ttf) = translate_string(x, phonecode_tables._arpabet2ipa)
-    ol = attach_tones_to_vowels(il, phonecode_tables._ipa_stressmarkers, phonecode_tables._ipa_vowels, -1, -1)
-    return "".join(ol)
+    return convert(x, ARPABET_KEY, IPA_KEY, language)
 
 
 def ipa2arpabet(x, language=None):
     """Convert IPA symbols to ARPABET"""
-    (il, ttf) = translate_string(x, phonecode_tables._ipa2arpabet)
-    ol = attach_tones_to_vowels(il, "012", phonecode_tables._arpabet_vowels, 1, 1)
-    return "".join(ol)
+    return convert(x, IPA_KEY, ARPABET_KEY, language)
 
 
 def timit2ipa(x, language=None):
     """Convert TIMIT phone codes to IPA"""
-    x = x.upper()
-    (il, ttf) = translate_string(x, phonecode_tables._timit2ipa)
-    return "".join(il)
+    return convert(x, TIMIT_KEY, IPA_KEY, language)
 
 
 def ipa2timit(x, language=None):
@@ -328,15 +285,12 @@ def ipa2timit(x, language=None):
 
 def buckeye2ipa(x, language=None):
     """Convert Buckeye phone codes to IPA"""
-    x = x.upper()
-    (il, ttf) = translate_string(x, phonecode_tables._buckeye2ipa)
-    return "".join(il)
+    return convert(x, BUCKEYE_KEY, IPA_KEY, language)
 
 
 def ipa2buckeye(x, language=None):
     "Convert IPA symbols to Buckeye phone codes"
-    (il, ttf) = translate_string(x, phonecode_tables._ipa2buckeye)
-    return "".join(il)
+    return convert(x, IPA_KEY, BUCKEYE_KEY, language)
 
 
 #######################################################################
@@ -344,16 +298,6 @@ def ipa2buckeye(x, language=None):
 # are used to convert symbols and lists of symbols, respectively,
 # to or from IPA, by calling appropriate other functions.
 #
-_convertfuncs = {
-    "arpabet": (arpabet2ipa, ipa2arpabet),
-    "xsampa": (xsampa2ipa, ipa2xsampa),
-    "disc": (disc2ipa, ipa2disc),
-    "callhome": (callhome2ipa, ipa2callhome),
-    "buckeye": (buckeye2ipa, ipa2buckeye),
-    "timit": (timit2ipa, ipa2timit),
-}
-
-
 def _verify_code(code):
     if code not in CODES:
         raise ValueError(f"{code} is not a valid phonecode. Choose from: {' '.join(CODES)}")
