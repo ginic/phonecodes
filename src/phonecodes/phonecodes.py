@@ -17,13 +17,123 @@ phonecodes.consonants
 # for other tables, see phonecode_tables.py
 """
 
+from collections import abc
+from dataclasses import dataclass
+from enum import Enum
+import re
+import warnings
+
 import phonecodes.phonecode_tables as phonecode_tables
 
-CODES = set(("ipa", "arpabet", "xsampa", "disc", "callhome", "buckeye", "timit"))
+# Phone codes
+IPA_KEY = "ipa"
+ARPABET_KEY = "arpabet"
+XSAMPA_KEY = "xsampa"
+DISC_KEY = "disc"
+CALLHOME_KEY = "callhome"
+BUCKEYE_KEY = "buckeye"
+TIMIT_KEY = "timit"
+
+CODES = set((IPA_KEY, ARPABET_KEY, XSAMPA_KEY, DISC_KEY, CALLHOME_KEY, BUCKEYE_KEY, TIMIT_KEY))
 LANGUAGES = set(("eng", "deu", "nld", "arz", "cmn", "spa", "yue", "lao", "vie"))
 
-vowels = phonecode_tables._ipa_vowels
-consonants = phonecode_tables._ipa_consonants
+
+class Phonecodes(Enum):
+    """Defines the set of valid phonecode mapping options supported
+    and which languages are covered. When language is not specified,
+    the mapping does not change depending on language.
+    """
+
+    # XSAMPA
+    IPA2XSAMPA = IPA_KEY, XSAMPA_KEY
+    XSAMPA2IPA = XSAMPA_KEY, IPA_KEY
+
+    # DISC
+    DISC2IPA = DISC_KEY, IPA_KEY
+    DISC2IPA_NLD = DISC_KEY, IPA_KEY, "nld"
+    DISC2IPA_ENG = DISC_KEY, IPA_KEY, "eng"
+    IPA2DISC = IPA_KEY, DISC_KEY
+
+    # CALLHOME
+    CALLHOME2IPA_ARZ = CALLHOME_KEY, IPA_KEY, "arz"
+    CALLHOME2IPA_CMN = CALLHOME_KEY, IPA_KEY, "cmn"
+    CALLHOME2IPA_SPA = CALLHOME_KEY, IPA_KEY, "spa"
+    IPA2CALLHOME_ARZ = IPA_KEY, CALLHOME_KEY, "arz"
+    IPA2CALLHOME_CMN = IPA_KEY, CALLHOME_KEY, "cmn"
+    IPA2CALLHOME_SPA = IPA_KEY, CALLHOME_KEY, "spa"
+
+    # ARPABET
+    ARPABET2IPA = ARPABET_KEY, IPA_KEY
+    IPA2ARPABET = IPA_KEY, ARPABET_KEY
+
+    # TIMIT
+    TIMIT2IPA = TIMIT_KEY, IPA_KEY
+
+    # Buckeye
+    BUCKEYE2IPA = BUCKEYE_KEY, IPA_KEY
+    IPA2BUCKEYE = IPA_KEY, BUCKEYE_KEY
+
+    def __init__(self, in_code, out_code, language=None):
+        self.in_code = in_code
+        self.out_code = out_code
+        self.language = language
+
+
+# Which symbol mapping will be used in conversion?
+_phonecode_lookup = {
+    # XSAMPA
+    Phonecodes.IPA2XSAMPA: phonecode_tables._ipa2xsampa,
+    Phonecodes.XSAMPA2IPA: phonecode_tables._xsampa_and_diac2ipa,
+    # DISC
+    Phonecodes.DISC2IPA: phonecode_tables._disc2ipa,
+    Phonecodes.DISC2IPA_NLD: phonecode_tables._disc2ipa_dutch,
+    Phonecodes.DISC2IPA_ENG: phonecode_tables._disc2ipa_english,
+    Phonecodes.IPA2DISC: phonecode_tables._ipa2disc,
+    # CALLHOME
+    Phonecodes.CALLHOME2IPA_ARZ: phonecode_tables._callhome2ipa[Phonecodes.CALLHOME2IPA_ARZ.language],
+    Phonecodes.CALLHOME2IPA_CMN: phonecode_tables._callhome2ipa[Phonecodes.CALLHOME2IPA_CMN.language],
+    Phonecodes.CALLHOME2IPA_SPA: phonecode_tables._callhome2ipa[Phonecodes.CALLHOME2IPA_SPA.language],
+    # ARPABET
+    Phonecodes.ARPABET2IPA: phonecode_tables._arpabet2ipa,
+    Phonecodes.IPA2ARPABET: phonecode_tables._ipa2arpabet,
+}
+
+
+@dataclass
+class AttachStressTonesConfig:
+    """Stores the settings for tone or stress attachment algorithms,
+    which can be different depending on the language and corpus format."""
+
+    tones: abc.Iterable[str] | str
+    vowels: abc.Iterable[str] | str
+    searchstep: int
+    catdir: int
+
+
+# Is there a configuration for adding tones or stress markers to the final output?
+_tone_stress_settings = {
+    Phonecodes.CALLHOME2IPA_ARZ: AttachStressTonesConfig(
+        phonecode_tables._ipa_stressmarkers, phonecode_tables._ipa_vowels, -1, -1
+    ),
+    Phonecodes.CALLHOME2IPA_CMN: AttachStressTonesConfig(
+        phonecode_tables._ipa_tones, phonecode_tables._ipa_vowels, -1, 1
+    ),
+    Phonecodes.CALLHOME2IPA_SPA: AttachStressTonesConfig(
+        phonecode_tables._ipa_stressmarkers,
+        phonecode_tables._ipa_vowels,
+        -1,
+        -1,
+    ),
+    Phonecodes.IPA2CALLHOME_ARZ: AttachStressTonesConfig(
+        "012", phonecode_tables._callhome_vowels[Phonecodes.IPA2CALLHOME_ARZ.language], 1, 1
+    ),
+    Phonecodes.IPA2CALLHOME_CMN: AttachStressTonesConfig(
+        "012345", phonecode_tables._callhome_vowels[Phonecodes.IPA2CALLHOME_CMN.language], -1, 1
+    ),
+    Phonecodes.IPA2CALLHOME_SPA: AttachStressTonesConfig(
+        "012", phonecode_tables._callhome_vowels[Phonecodes.IPA2CALLHOME_SPA.language], 1, 1
+    ),
+}
 
 
 #####################################################################
@@ -62,7 +172,7 @@ def translate_string(s, d):
     return (tl[::-1], translated[::-1])
 
 
-def attach_tones_to_vowels(il, tones, vowels, searchstep, catdir):
+def attach_tones_to_vowels(il: list[str], tones, vowels, searchstep, catdir) -> list[str]:
     """Return a copy of il, with each tone attached to nearest vowel if any.
     searchstep=1 means search for next vowel, searchstep=-1 means prev vowel.
     catdir>=0 means concatenate after vowel, catdir<0 means cat before vowel.
@@ -104,7 +214,7 @@ def tone2ipa(n, language):
 
 #####################################################################
 # DISC, the system used by CELEX
-def disc2ipa(x, language):
+def disc2ipa(x, language=None):
     """Convert DISC symbol x into IPA, for language L"""
     if language == "nld":
         (tl, ttf) = translate_string(x, phonecode_tables._disc2ipa_dutch)
@@ -117,21 +227,10 @@ def disc2ipa(x, language):
         return "".join(tl)
 
 
-def ipa2disc(x, language):
+def ipa2disc(x, language=None):
     """Convert IPA symbol x into DISC"""
     (tl, ttf) = translate_string(x, phonecode_tables._ipa2disc)
     return "".join(tl)
-
-
-def ipa2disc_old(x, language):
-    """Convert IPA symbol x into DISC for given language"""
-    # Convert whole thing if possible; otherwise try prefix+vowel; else quit
-    if x in phonecode_tables._ipa2disc:
-        return phonecode_tables._ipa2disc[x]
-    elif x[0] in phonecode_tables._ipa2disc and x[1:] in phonecode_tables._ipa2disc:
-        return phonecode_tables._ipa2disc[x[0]] + phonecode_tables._ipa2disc[x[1:]]
-    else:
-        raise KeyError("Unknown IPA symbol %s for language %s" % (x, language))
 
 
 #######################################################################
@@ -157,11 +256,10 @@ def callhome2ipa(x, language):
             -1,
             -1,
         )
-    # TODO What to do if language doesn't match
     return "".join(ol)
 
 
-def ipa2callhome(x, language):
+def ipa2callhome(x, language=None):
     """Convert IPA symbol x into callhome notation for given language"""
     (il, ttf) = translate_string(x, phonecode_tables._ipa2callhome[language])
     if language == "arz":
@@ -170,7 +268,6 @@ def ipa2callhome(x, language):
         ol = attach_tones_to_vowels(il, "012345", phonecode_tables._callhome_vowels["cmn"], -1, 1)
     elif language == "spa":
         ol = attach_tones_to_vowels(il, "012", phonecode_tables._callhome_vowels["spa"], 1, 1)
-    # TODO What to do if language doesn't match?
     return "".join(ol)
 
 
@@ -244,6 +341,9 @@ def convert(s0, c0, c1, language=None, post_ipa_mapping: dict[str, str] | None =
         c0 (str): Input phonecode: 'arpabet', 'xsampa','disc', 'callhome' or 'ipa'
         c1 (str): Output phonecode:  'arpabet', 'xsampa','disc', 'callhome' or 'ipa'
         language (str | None): The language of the string, optional since it is only required for 'disc' and 'callhome' phonecodes
+        post_ipa_mapping dict[str, str]: Optional additional normalization of
+
+
 
     Raises:
         ValueError: If the phonecode is not a valid option
@@ -254,25 +354,68 @@ def convert(s0, c0, c1, language=None, post_ipa_mapping: dict[str, str] | None =
     _verify_code(c0)
     _verify_code(c1)
 
-    if c0 == "ipa" and c1 != "ipa":
-        x = _convertfuncs[c1][1](s0, language)
-        return x
-    elif c0 != "ipa" and c1 == "ipa":
-        return _convertfuncs[c0][0](s0, language)
-    else:
-        raise ValueError(f"Must convert to/from 'ipa', not '{c0}' to '{c1}'")
+    # Get the right enumerator for looking up mappings
+    valid_phonecodes = Phonecodes.__members__.values()
+    phonecode_enum = (c0, c1, language)
+    if phonecode_enum not in valid_phonecodes:
+        phonecode_enum = (c0, c1, None)  # Fall back to language not specified
+        if phonecode_enum not in valid_phonecodes:
+            raise ValueError(
+                f"Phonecode pairing ({c0, c1, language}) is not valid. Must convert to/from 'ipa' in supported languages or leave language unspecified."
+            )
+
+    # Most basic mapping
+    input_string = s0
+    translation_mapping = _phonecode_lookup[phonecode_enum]
+    if phonecode_enum in [Phonecodes.ARPABET2IPA, Phonecodes.BUCKEYE2IPA, Phonecodes.TIMIT2IPA]:
+        input_string = input_string.upper()
+    (mapped_string, ttf) = translate_string(input_string, translation_mapping)
+
+    # Add tones/stress if it's configured for this enum
+    if phonecode_enum in _tone_stress_settings:
+        stress_config = _tone_stress_settings[phonecode_enum]
+        mapped_string = attach_tones_to_vowels(
+            mapped_string, stress_config.tones, stress_config.vowels, stress_config.searchstep, stress_config.catdir
+        )
+
+    final_string = "".join(mapped_string)
+    if post_ipa_mapping is not None:
+        final_string = _post_process_reduction(final_string, translation_mapping, post_ipa_mapping)
+
+    return final_string
 
 
 def convertlist(l0, c0, c1, language, post_ipa_mapping: dict[str, str] | None = None):
     return [convert(s0, c0, c1, language, post_ipa_mapping) for s0 in l0]
 
 
-def _post_process_ipa_inventories(post_ipa_mapping: dict[str, str]):
-    # TODO
-    pass
+def _post_process_reduction(
+    input_string: str, original_translation_mapping: dict[str, str], post_ipa_mapping: dict[str, str]
+):
+    """
+
+    Args:
+        post_ipa_mapping: _description_
+    """
+    cascading_keys = _find_cascading_keys_in_symbol_mapping(post_ipa_mapping)
+    if len(cascading_keys) > 0:
+        warnings.warn(
+            f"Post-processing does not perfrom cascading replacements, but overlapping key/value pairs are detected. Check that this is intended. These keys are affected: {cascading_keys}."
+        )
+
+    new_keys = _get_extra_reduction_keys(original_translation_mapping, post_ipa_mapping)
+    if len(new_keys) > 0:
+        warnings.warn(f"There are keys in post-processing which do not appear in the original phonetable: {new_keys}.")
+
+    # Replacements happen greedily in the order of the post processing map,
+    # because there may be intentional orderings of substitutions.
+    pattern = "|".join(re.escape(k) for k in post_ipa_mapping.keys())
+
+    re.sub(pattern, lambda match: post_ipa_mapping[match.group()], input_string)
+    return
 
 
-def _find_cascading_keys_in_inventory_map(symbol_inventory_map: dict[str, str]) -> list[tuple[str, str]]:
+def _find_cascading_keys_in_symbol_mapping(symbol_inventory_map: dict[str, str]) -> list[tuple[str, str]]:
     """Returns any keys that might have values that would cascade to later keys during replacement.
     Used as a warning if there seem to be cascading replacements involving the same symbol.
     This doesn't impact the behavior of the substitution, but serves as a check
@@ -295,3 +438,16 @@ def _find_cascading_keys_in_inventory_map(symbol_inventory_map: dict[str, str]) 
                 result.append((k1, k2))
 
     return result
+
+
+def _get_extra_reduction_keys(to_ipa_map: dict[str, str], ipa_reduction_map: dict[str, str]) -> set[str]:
+    """Returns the set of keys in ipa_reduction_map that are not used in the corpus' official IPA inventory.
+
+    Args:
+        to_ipa_map: The original corpus symbols mapped to IPA symbols.
+        ipa_symbol_inventory_map: An IPA symbols to IPA symbol mapping for standardizing the corpus.
+    """
+    ipa_original = set(to_ipa_map.values())
+    ipa_reduction_keys = set(ipa_reduction_map.keys())
+    overlap = ipa_reduction_keys - ipa_original
+    return overlap

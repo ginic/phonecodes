@@ -128,4 +128,4 @@ def test_additional_timit_examples(ipa_str, timit_str):
     ],
 )
 def test_find_cascading_keys_in_inventory_map(mapping, expected_value):
-    assert phonecodes._find_cascading_keys_in_inventory_map(mapping) == expected_value
+    assert phonecodes._find_cascading_keys_in_symbol_mapping(mapping) == expected_value
