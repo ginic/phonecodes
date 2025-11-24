@@ -115,7 +115,7 @@ _phonecode_lookup = {
     Phonecodes.IPA2ARPABET: phonecode_tables._ipa2arpabet,
     # Buckeye
     Phonecodes.BUCKEYE2IPA: phonecode_tables._buckeye2ipa,
-    Phonecodes.IPA2ARPABET: phonecode_tables._ipa2buckeye,
+    Phonecodes.IPA2BUCKEYE: phonecode_tables._ipa2buckeye,
     # TIMIT
     Phonecodes.TIMIT2IPA: phonecode_tables._timit2ipa,
 }
