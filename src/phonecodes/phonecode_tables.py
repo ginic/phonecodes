@@ -717,8 +717,8 @@ BUCKEYE_IPA_TO_TIMIT_BUCKEYE_SHARED = {
     # Nasalized flap is too inconsistently annotated, so reduce to 'n'
     "ɾ̃": "n",
     # Use schwa in final vocabulary
-    "ʌ": "ə",
     "ʌ̃": "ə",
+    "ʌ": "ə",
 }
 TIMIT_IPA_TO_TIMIT_BUCKEYE_SHARED = {
     # These symbols are not present in Buckeye IPA, so must be reduced
