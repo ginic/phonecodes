@@ -17,6 +17,7 @@ phonecodes.consonants
 # for other tables, see phonecode_tables.py
 """
 
+from __future__ import annotations
 from collections import abc
 from dataclasses import dataclass
 from enum import Enum
@@ -25,7 +26,7 @@ import warnings
 
 import phonecodes.phonecode_tables as phonecode_tables
 
-# Phone codes
+# Phonecodes constants for easier maintenance
 IPA_KEY = "ipa"
 ARPABET_KEY = "arpabet"
 XSAMPA_KEY = "xsampa"
@@ -220,14 +221,14 @@ def attach_tones_to_vowels(il: list[str], tones, vowels, searchstep, catdir) -> 
 
 #####################################################################
 # X-SAMPA
-def ipa2xsampa(x, language=None):
+def ipa2xsampa(x, language=None, post_conversion_mapping=None):
     """Attempt to return X-SAMPA equivalent of an IPA phone x."""
-    return convert(x, IPA_KEY, XSAMPA_KEY, language)
+    return convert(x, IPA_KEY, XSAMPA_KEY, language, post_conversion_mapping)
 
 
-def xsampa2ipa(x, language=None):
+def xsampa2ipa(x, language=None, post_conversion_mapping=None):
     """Return the IPA equivalent of X-SAMPA phone x."""
-    return convert(x, XSAMPA_KEY, IPA_KEY, language)
+    return convert(x, XSAMPA_KEY, IPA_KEY, language, post_conversion_mapping)
 
 
 ######################################################################
@@ -238,59 +239,59 @@ def tone2ipa(n, language):
 
 #####################################################################
 # DISC, the system used by CELEX
-def disc2ipa(x, language=None):
+def disc2ipa(x, language=None, post_conversion_mapping=None):
     """Convert DISC symbol x into IPA, for language L"""
-    return convert(x, DISC_KEY, IPA_KEY, language)
+    return convert(x, DISC_KEY, IPA_KEY, language, post_conversion_mapping)
 
 
-def ipa2disc(x, language=None):
+def ipa2disc(x, language=None, post_conversion_mapping=None):
     """Convert IPA symbol x into DISC"""
-    return convert(x, IPA_KEY, DISC_KEY, language)
+    return convert(x, IPA_KEY, DISC_KEY, language, post_conversion_mapping)
 
 
 #######################################################################
 # Callhome phone codes
-def callhome2ipa(x, language):
+def callhome2ipa(x, language, post_conversion_mapping=None):
     """Convert callhome phone symbol x into IPA for given language"""
-    return convert(x, CALLHOME_KEY, IPA_KEY, language)
+    return convert(x, CALLHOME_KEY, IPA_KEY, language, post_conversion_mapping)
 
 
-def ipa2callhome(x, language=None):
+def ipa2callhome(x, language=None, post_conversion_mapping=None):
     """Convert IPA symbol x into callhome notation for given language"""
-    return convert(x, IPA_KEY, CALLHOME_KEY, language)
+    return convert(x, IPA_KEY, CALLHOME_KEY, language, post_conversion_mapping)
 
 
 #########################################################################
 # ARPABET, TIMIT, Buckeye
-def arpabet2ipa(x, language=None):
+def arpabet2ipa(x, language=None, post_conversion_mapping=None):
     """Convert ARPABET symbol X to IPA"""
-    return convert(x, ARPABET_KEY, IPA_KEY, language)
+    return convert(x, ARPABET_KEY, IPA_KEY, language, post_conversion_mapping)
 
 
-def ipa2arpabet(x, language=None):
+def ipa2arpabet(x, language=None, post_conversion_mapping=None):
     """Convert IPA symbols to ARPABET"""
-    return convert(x, IPA_KEY, ARPABET_KEY, language)
+    return convert(x, IPA_KEY, ARPABET_KEY, language, post_conversion_mapping)
 
 
-def timit2ipa(x, language=None):
+def timit2ipa(x, language=None, post_conversion_mapping=None):
     """Convert TIMIT phone codes to IPA"""
-    return convert(x, TIMIT_KEY, IPA_KEY, language)
+    return convert(x, TIMIT_KEY, IPA_KEY, language, post_conversion_mapping)
 
 
-def ipa2timit(x, language=None):
+def ipa2timit(x, language=None, post_conversion_mapping=None):
     raise ValueError(
         "Converting to 'timit' is unsupported, because TIMIT closure symbols for stops cannot be determined from text."
     )
 
 
-def buckeye2ipa(x, language=None):
+def buckeye2ipa(x, language=None, post_conversion_mapping=None):
     """Convert Buckeye phone codes to IPA"""
-    return convert(x, BUCKEYE_KEY, IPA_KEY, language)
+    return convert(x, BUCKEYE_KEY, IPA_KEY, language, post_conversion_mapping)
 
 
-def ipa2buckeye(x, language=None):
+def ipa2buckeye(x, language=None, post_conversion_mapping=None):
     "Convert IPA symbols to Buckeye phone codes"
-    return convert(x, IPA_KEY, BUCKEYE_KEY, language)
+    return convert(x, IPA_KEY, BUCKEYE_KEY, language, post_conversion_mapping)
 
 
 #######################################################################
@@ -303,7 +304,9 @@ def _verify_code(code):
         raise ValueError(f"{code} is not a valid phonecode. Choose from: {' '.join(CODES)}")
 
 
-def convert(s0, c0, c1, language=None, post_ipa_mapping: dict[str, str] | None = None):
+def convert(
+    s0: str, c0: str, c1: str, language: str | None = None, post_conversion_mapping: dict[str, str] | None = None
+) -> str:
     """Convert a string between a given phonecode and IPA
 
     Args:
@@ -311,15 +314,13 @@ def convert(s0, c0, c1, language=None, post_ipa_mapping: dict[str, str] | None =
         c0 (str): Input phonecode: 'arpabet', 'xsampa','disc', 'callhome' or 'ipa'
         c1 (str): Output phonecode:  'arpabet', 'xsampa','disc', 'callhome' or 'ipa'
         language (str | None): The language of the string, optional since it is only required for 'disc' and 'callhome' phonecodes
-        post_ipa_mapping dict[str, str]: Optional additional normalization of
-
-
+        post_conversion_mapping dict[str, str]: Optional additional normalization mapping that occurs after conversion and stress assignments (greedy, in the same order as the dictionary keys)
 
     Raises:
         ValueError: If the phonecode is not a valid option
 
     Returns:
-        _type_: _description_
+        str: String converted and post processed according to the specified phonecode mappings
     """
     _verify_code(c0)
     _verify_code(c1)
@@ -342,10 +343,12 @@ def convert(s0, c0, c1, language=None, post_ipa_mapping: dict[str, str] | None =
         )
 
     final_string = "".join(mapped_string)
-    if post_ipa_mapping is not None:
-        final_string = _post_process_reduction(final_string, translation_mapping, post_ipa_mapping)
 
-    return final_string
+    # Optional post processing normalization
+    if post_conversion_mapping is not None:
+        final_string = _post_process_reduction(final_string, translation_mapping, post_conversion_mapping)
+
+    return final_string.strip()
 
 
 def convertlist(l0, c0, c1, language, post_ipa_mapping: dict[str, str] | None = None):
@@ -353,29 +356,34 @@ def convertlist(l0, c0, c1, language, post_ipa_mapping: dict[str, str] | None = 
 
 
 def _post_process_reduction(
-    input_string: str, original_translation_mapping: dict[str, str], post_ipa_mapping: dict[str, str]
-):
-    """
+    input_string: str, original_translation_mapping: dict[str, str], reduction_mapping: dict[str, str]
+) -> str:
+    """Additional normalization step, replaces symbols in the input_str according to the reduction_mapping (original symbol -> desired symbol).
+
+    Before the replacement occurs, checks for conflicting behaviors, such as mapping symbols which don't appear in the
+    original_translation_mapping symbol inventory or potential cascading replacements.
+    These checks show a warning, but will not raise an Exception.
 
     Args:
-        post_ipa_mapping: _description_
+        input_string: str, string to do symbol replacements/substitutions on
+        original_translation_mapping: dict[str, str], original mapping to/from IPA, used only for validation checks
+        reduction_mapping: dict[str, str], additional symbol reduction, usually for IPA inventories
     """
-    cascading_keys = _find_cascading_keys_in_symbol_mapping(post_ipa_mapping)
+    cascading_keys = _find_cascading_keys_in_symbol_mapping(reduction_mapping)
     if len(cascading_keys) > 0:
         warnings.warn(
             f"Post-processing does not perfrom cascading replacements, but overlapping key/value pairs are detected. Check that this is intended. These keys are affected: {cascading_keys}."
         )
 
-    new_keys = _get_extra_reduction_keys(original_translation_mapping, post_ipa_mapping)
+    new_keys = _get_extra_reduction_keys(original_translation_mapping, reduction_mapping)
     if len(new_keys) > 0:
         warnings.warn(f"There are keys in post-processing which do not appear in the original phonetable: {new_keys}.")
 
     # Replacements happen greedily in the order of the post processing map,
     # because there may be intentional orderings of substitutions.
-    pattern = "|".join(re.escape(k) for k in post_ipa_mapping.keys())
+    pattern = "|".join(re.escape(k) for k in reduction_mapping.keys())
 
-    re.sub(pattern, lambda match: post_ipa_mapping[match.group()], input_string)
-    return
+    return re.sub(pattern, lambda match: reduction_mapping[match.group()], input_string)
 
 
 def _find_cascading_keys_in_symbol_mapping(symbol_inventory_map: dict[str, str]) -> list[tuple[str, str]]:
@@ -403,14 +411,14 @@ def _find_cascading_keys_in_symbol_mapping(symbol_inventory_map: dict[str, str])
     return result
 
 
-def _get_extra_reduction_keys(to_ipa_map: dict[str, str], ipa_reduction_map: dict[str, str]) -> set[str]:
-    """Returns the set of keys in ipa_reduction_map that are not used in the corpus' official IPA inventory.
+def _get_extra_reduction_keys(original_mapping: dict[str, str], reduction_mapping: dict[str, str]) -> set[str]:
+    """Returns the set of keys in reduction_map that are not used in the corpus' official symbol inventory.
 
     Args:
-        to_ipa_map: The original corpus symbols mapped to IPA symbols.
-        ipa_symbol_inventory_map: An IPA symbols to IPA symbol mapping for standardizing the corpus.
+        original_mapping: The original corpus symbols mapped to/from IPA symbols.
+        reduction_mapping: An symbol to symbol mapping for standardizing the output.
     """
-    ipa_original = set(to_ipa_map.values())
-    ipa_reduction_keys = set(ipa_reduction_map.keys())
+    ipa_original = set(original_mapping.values())
+    ipa_reduction_keys = set(reduction_mapping.keys())
     overlap = ipa_reduction_keys - ipa_original
     return overlap

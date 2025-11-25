@@ -3,6 +3,11 @@ test phone code conversion, and test both word and phone searches.
 """
 
 import phonecodes.phonecodes as phonecodes
+from phonecodes.phonecode_tables import (
+    BUCKEYE_IPA_TO_TIMIT_BUCKEYE_SHARED,
+    TIMIT_IPA_TO_TIMIT_BUCKEYE_SHARED,
+    STANDARD_TIMIT_IPA_REDUCTION,
+)
 
 import pytest
 
@@ -72,10 +77,7 @@ def test_additional_buckeye_examples(ipa_str, buckeye_str):
 @pytest.mark.parametrize(
     "ipa_str, timit_str",
     [
-        (
-            " tʃ ɑ k l ɨ t ",
-            "h# ch aa kcl k l ix tcl t h#",
-        ),  # 'chocolate' with start/stop tokens and no initial closure
+        ("tʃ ɑ k l ɨ t", "h# ch aa kcl k l ix tcl t h#"),  # 'chocolate' with start/stop tokens and no initial closure
         ("tʃ ɑ k l ɨ t", "tcl ch aa k l ix tcl t"),  # 'chocolate' with mixed closure inclusion
         ("tʃ ɑ k l ɨ t", "tcl ch aa k l ix t"),  # 'chocolate' with mixed closure inclusion
         ("tʃɑklɨt", "tclchaaklixtclt"),  # 'chocolate' with mixed closure inclusion, no spaces
@@ -142,3 +144,28 @@ def test_find_cascading_keys_in_inventory_map(mapping, expected_value):
 )
 def test_arpabet_stress_attachment(example, incode, outcode, expected):
     assert phonecodes.convert(example, incode, outcode) == expected
+
+
+@pytest.mark.parametrize(
+    "example, incode, outcode, post_conversion_mapping, expected",
+    [
+        ("h# ch aa kcl k l ix tcl t h#", "timit", "ipa", STANDARD_TIMIT_IPA_REDUCTION, "tʃ ɑ k l ɪ t"),
+        ("h#chaakclklixzhh#", "timit", "ipa", STANDARD_TIMIT_IPA_REDUCTION, "tʃɑklɪʃ"),
+        (
+            "w iyn w ern k ih n aan nx eh tq",
+            "buckeye",
+            "ipa",
+            BUCKEYE_IPA_TO_TIMIT_BUCKEYE_SHARED,
+            "w i w ɹ̩ k ɪ n ɑ n ɛ ʔ",
+        ),
+        (
+            "w ax w axr k ih n aa nx eh q hv zh",
+            "timit",
+            "ipa",
+            TIMIT_IPA_TO_TIMIT_BUCKEYE_SHARED,
+            "w ə w ɹ̩ k ɪ n ɑ n ɛ ʔ h ʒ",
+        ),
+    ],
+)
+def test_convert_with_post_conversion_mapping(example, incode, outcode, post_conversion_mapping, expected):
+    assert phonecodes.convert(example, incode, outcode, post_conversion_mapping=post_conversion_mapping) == expected
