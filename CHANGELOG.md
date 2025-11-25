@@ -8,6 +8,17 @@ You should also add project tags for each release in Github, see [Managing relea
 
 # [Unreleased]
 
+# [2.0.0] - 11/24/2024
+### Added
+- A Phonecodes enum class to the phonecodes module, to enforce valid conversion and language pairs more explicitly.
+- Support for post-processing after conversion to/from IPA is performed, to allow for reduction to a shared symbol set. This is useful, for example, to convert standard TIMIT symbol reductions or a shared symbol set between Buckeye and TIMIT.
+
+### Changed
+- All codeA2codeB conversion functions in phonecodes now rely on the convert function, which should increase maintainability and reusability of the code.
+
+### Fixed
+- Added missing ARPABET IPA vowels (diphthongs and r-colored vowels) to the set of IPA vowels in phonecode_tables, so that stress markers would be added correctly.  Fixes https://github.com/ginic/phonecodes/issues/15.
+
 # [1.2.3] - 10/23/2025
 ### Changed
 - Added python 3.14 to package and pytest GitHub actions
