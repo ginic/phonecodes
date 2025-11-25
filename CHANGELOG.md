@@ -8,7 +8,7 @@ You should also add project tags for each release in Github, see [Managing relea
 
 # [Unreleased]
 
-# [2.0.0] - 11/24/2024
+# [2.0.0] - 11/25/2024
 ### Added
 - A Phonecodes enum class to the phonecodes module, to enforce valid conversion and language pairs more explicitly.
 - Support for post-processing after conversion to/from IPA is performed, to allow for reduction to a shared symbol set. This is useful, for example, to convert standard TIMIT symbol reductions or a shared symbol set between Buckeye and TIMIT.
