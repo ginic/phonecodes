@@ -129,3 +129,16 @@ def test_additional_timit_examples(ipa_str, timit_str):
 )
 def test_find_cascading_keys_in_inventory_map(mapping, expected_value):
     assert phonecodes._find_cascading_keys_in_symbol_mapping(mapping) == expected_value
+
+
+@pytest.mark.parametrize(
+    "example, incode, outcode, expected",
+    [
+        ("AE1 D V ER0 T", "arpabet", "ipa", "ˈæ d v ɚ t"),
+        ("AE1 D V ER1 T", "arpabet", "ipa", "ˈæ d v ˈɝ t"),
+        ("AE0 ER1 T", "arpabet", "ipa", "æ ˈɝ t"),
+        ("AE0 D V ER1 T AH0 Z M AH0 N T", "arpabet", "ipa", "æ d v ˈɝ t ə z m ə n t"),
+    ],
+)
+def test_arpabet_stress_attachment(example, incode, outcode, expected):
+    assert phonecodes.convert(example, incode, outcode) == expected
