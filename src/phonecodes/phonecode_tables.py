@@ -731,5 +731,6 @@ TIMIT_IPA_TO_TIMIT_BUCKEYE_SHARED = {
     "ɝ": "ɹ̩",
     "ɚ": "ɹ̩",
     # Use schwa in final vocabulary
+    "ə̥": "ə",
     "ʌ": "ə",
 }
